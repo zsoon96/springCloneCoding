@@ -26,7 +26,7 @@ Spring Boot + React를 사용한 클론 코딩 프로젝트
 
 🤔 Team
 -------------  
-[Front-End]   
+[Front-End] [김상윤](https://github.com/tkddbs1008)  
 [Back-End] [양지선](https://github.com/zsoon96), [장민우](https://github.com/Littlecold4)
 
 <br/>
