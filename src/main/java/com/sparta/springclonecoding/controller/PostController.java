@@ -1,7 +1,9 @@
 package com.sparta.springclonecoding.controller;
 
+import com.sparta.springclonecoding.dto.DetailDto;
 import com.sparta.springclonecoding.dto.PostRequestDto;
 import com.sparta.springclonecoding.dto.PostResponseDto;
+import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.service.PostService;
 import lombok.RequiredArgsConstructor;

@@ -1,15 +1,13 @@
 package com.sparta.springclonecoding.service;
 
 import com.sparta.springclonecoding.dto.LikeDto;
-import com.sparta.springclonecoding.model.Like;
+
+import com.sparta.springclonecoding.model.Favorite;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.repository.LikeRepository;
 import com.sparta.springclonecoding.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -23,7 +21,7 @@ public class LikeService {
                 ()-> new IllegalArgumentException("해당 포스트가 없습니다.")
         );
         LikeDto likeDto = new LikeDto(userid);
-        Like like = new Like(likeDto);
+        Favorite like = new Favorite(likeDto);
         post.getLikes().add(like);
     }
 

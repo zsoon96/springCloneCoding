@@ -9,15 +9,15 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Like {
+public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column
     private Long id;
 
     private Long userid;
 
-    public Like(LikeDto likeDto){
+    public Favorite(LikeDto likeDto){
         this.userid = likeDto.getUserid();
     }
 }
