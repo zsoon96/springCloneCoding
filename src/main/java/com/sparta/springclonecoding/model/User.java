@@ -13,7 +13,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column
     private Long id;
 
     @Column(unique = true)
@@ -31,7 +31,7 @@ public class User {
 //
 //    private String nickname;
 
-//    @OneToMany
-//    @JoinColumn(name = "post_id")
-//    private List<Post> posts = new ArrayList<>();
+    @OneToMany
+    @JoinColumn
+    private List<Post> posts = new ArrayList<>();
 }
