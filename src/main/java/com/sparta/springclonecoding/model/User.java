@@ -16,15 +16,22 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
     private String password;
 
-    private String profile;
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
-    private String nickname;
+//    private String profile;
+//
+//    private String nickname;
 
-    @OneToMany
-    @JoinColumn(name = "post_id")
-    private List<Post> posts = new ArrayList<>();
+//    @OneToMany
+//    @JoinColumn(name = "post_id")
+//    private List<Post> posts = new ArrayList<>();
 }
