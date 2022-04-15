@@ -14,23 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
-public class Post extends Timestamped {
+@ToString
+public class Post{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column
     private Long id;
 
-//    private Long userId;
+    private Long userId;
 
     private String imageUrl;
 
     private String content;
-
-    @Transient // 비즈니스 로직에만 필요 - 매핑 무시
-    private Long likeCnt = 0L; // 좋아요 수 (초기화)
 
     @OneToMany
     @JoinColumn(name = "comment_id")
@@ -39,11 +36,11 @@ public class Post extends Timestamped {
     @OneToMany
     @JoinColumn(name = "like_id")
     private List<Like> likes = new ArrayList<>();
-
-
-    public Post(PostRequestDto postRequestDto, Long likeCnt) {
+  
+    public Post(PostRequestDto postRequestDto, Long userid){
+        this.imageUrl = postRequestDto.getImage();
         this.content = postRequestDto.getContent();
-        this.imageUrl = postRequestDto.getImageUrl();
-        this.likeCnt = likeCnt;
+        this.userId = userid;
+
     }
 }

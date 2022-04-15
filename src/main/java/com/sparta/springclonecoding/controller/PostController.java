@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class PostController {
-
     private final PostService postService;
 
     @PostMapping("/api/posts")
@@ -23,6 +22,18 @@ public class PostController {
     @GetMapping("/api/posts")
     public List<PostResponseDto> showPost() {
         return postService.getPost();
+        
+    }
+    
+        @GetMapping("/api/posts/mypost/{userid}")
+    public ProfileDto showProfile(@PathVariable Long userid){
+       return postService.showProfile(userid);
+    }
+
+    @GetMapping("/api/detail/{postid}/{userid}")
+    public DetailDto showDetail(@PathVariable Long postid,
+                                @PathVariable Long userid){
+        return postService.showDetail(postid,userid);
     }
 //
 //    @PutMapping("/api/posts/{postid}")
