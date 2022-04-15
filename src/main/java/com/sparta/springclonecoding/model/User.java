@@ -30,6 +30,7 @@ public class User {
 
     private String nickname;
 
+
     @OneToMany
     @JoinColumn
     private List<Post> posts;

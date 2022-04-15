@@ -15,7 +15,6 @@ public class Favorite {
     @Column
     private Long id;
 
-    private Boolean like;
 
     private Long userid;
 
