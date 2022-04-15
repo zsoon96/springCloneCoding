@@ -18,9 +18,9 @@ public class ProfileDto {
     List<Post> post;
 
     public ProfileDto(User user, int postCnt){
-        this.nickname = user.getNickname();
-        this.progfileImg = user.getProfile();
-        this.post = user.getPosts();
+        this.nickname = user.getUsername();
+        this.progfileImg= user.getProfile();
         this.postCnt = postCnt;
+        this.post = user.getPosts();
     }
 }

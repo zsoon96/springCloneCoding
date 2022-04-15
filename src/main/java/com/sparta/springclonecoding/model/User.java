@@ -27,11 +27,11 @@ public class User {
         this.password = password;
     }
 
-//    private String profile;
-//
-//    private String nickname;
+    private String profile;
 
-//    @OneToMany
-//    @JoinColumn(name = "post_id")
-//    private List<Post> posts = new ArrayList<>();
+    private String nickname;
+
+    @OneToMany
+    @JoinColumn
+    private List<Post> posts;
 }

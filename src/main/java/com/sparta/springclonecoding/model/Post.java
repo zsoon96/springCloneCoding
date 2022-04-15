@@ -5,16 +5,20 @@ package com.sparta.springclonecoding.model;
 import com.sparta.springclonecoding.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class Post<List> {
+@ToString
+public class Post{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column
     private Long id;
 
     private Long userId;
@@ -25,11 +29,11 @@ public class Post<List> {
 
     @OneToMany
     @JoinColumn(name = "comment_id")
-    private List<Comment> comments;
+    private List<Comment> comments =new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "like_id")
-    private List<Like> likes;
+    private List<Like> likes = new ArrayList<>();
 
 //    @CreatedDate
 //    @JsonFormat(pattern = "yyyy-MM-dd")
