@@ -5,8 +5,10 @@ import com.sparta.springclonecoding.dto.PostRequestDto;
 import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.model.Post;
+import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,15 +29,15 @@ public class PostController {
         
     }
     
-        @GetMapping("/api/posts/mypost/{userid}")
-    public ProfileDto showProfile(@PathVariable Long userid){
-       return postService.showProfile(userid);
+    @GetMapping("/api/posts/mypost")
+    public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+       return postService.showProfile(userDetails);
     }
 
-    @GetMapping("/api/detail/{postid}/{userid}")
+    @GetMapping("/api/detail/{postid}")
     public DetailDto showDetail(@PathVariable Long postid,
-                                @PathVariable Long userid){
-        return postService.showDetail(postid,userid);
+                                @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.showDetail(postid,userDetails);
     }
 //
 //    @PutMapping("/api/posts/{postid}")

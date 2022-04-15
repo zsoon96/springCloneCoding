@@ -4,9 +4,11 @@ import com.sparta.springclonecoding.dto.CommentRequestDto;
 import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.repository.CommentRepository;
+import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.omg.PortableServer.POA;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -16,7 +18,8 @@ public class CommentController {
 
     @PostMapping("/api/comment/{userid}")
     public Comment registComment(@RequestBody CommentRequestDto commentRequestDto,
-                                 @PathVariable Long userid){
+                                 @AuthenticationPrincipal UserDetailsImpl userDetails){
+        Long userid = userDetails.getUser().getId();
        return commentservice.registComment(commentRequestDto,userid);
     }
 

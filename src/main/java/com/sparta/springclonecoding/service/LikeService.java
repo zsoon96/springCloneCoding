@@ -23,6 +23,7 @@ public class LikeService {
         LikeDto likeDto = new LikeDto(userid);
         Favorite like = new Favorite(likeDto);
         post.getLikes().add(like);
+        likeRepository.save(like);
     }
 
     public void unpressLike(Long postid,Long userid){
