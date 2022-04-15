@@ -1,13 +1,12 @@
 package com.sparta.springclonecoding.dto;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
-@ToString
+@NoArgsConstructor
 public class PostRequestDto {
-    String content;
-    String image;
+    private String content;
+//    private String imgfile; // 파일 변환 여부 확인
+    private String imageUrl;
 }

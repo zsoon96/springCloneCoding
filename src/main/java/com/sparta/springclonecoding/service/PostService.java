@@ -17,16 +17,6 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public void registPost(PostRequestDto postRequestDto){
-        Long userid = 1L;
-        System.out.println(postRequestDto);
-
-        Post post = new Post(postRequestDto, userid);
-        System.out.println(post);
-        System.out.println("asd");
-        postRepository.save(post);
-    }
-
     public ProfileDto showProfile(Long userid){
         User user = userRepository.findById(userid).orElseThrow(
                 () -> new IllegalArgumentException("없는 유저입니다.")
@@ -48,5 +38,26 @@ public class PostService {
             }
         }
         return new DetailDto(post,post.getLikes().size(),myLike);
+    }
+
+
+    // 게시물 저장
+    public Post postPost (PostRequestDto postRequestDto){
+        Long likeCnt = 0L; // 좋아요 수 초기화
+        Post post = new Post(postRequestDto,likeCnt);
+        return postRepository.save(post);
+    }
+
+    // 게시물 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기
+    public List<PostResponseDto> getPost () {
+        List<Post> posts = postRepository.findAll();
+        List<PostResponseDto> postResponseDtos = new ArrayList<>();
+        for (Post post : posts) {
+            Long commentCnt = (long) post.getComments().size();
+//            Long likeCnt = (long) post.getLikes().size();
+            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt);
+            postResponseDtos.add(postResponseDto);
+        }
+        return postResponseDtos;
     }
 }
