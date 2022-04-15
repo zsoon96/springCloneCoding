@@ -24,7 +24,7 @@ public class User {
 
     private String nickname;
 
-    @OneToMany
-    @JoinColumn(name = "post_id")
-    private List<Post> posts = new ArrayList<>();
+//    @OneToMany
+//    @JoinColumn(name = "post_id")
+//    private List<Post> posts = new ArrayList<>();
 }
