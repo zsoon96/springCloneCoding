@@ -4,6 +4,9 @@ import com.sparta.springclonecoding.dto.CommentRequestDto;
 import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import com.sparta.springclonecoding.security.UserDetailsImpl;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -11,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentservice;
 
+    // 댓글 작성
     @PostMapping("/api/comment/{userid}")
     public Comment registComment(@RequestBody CommentRequestDto commentRequestDto,
-                                 @PathVariable Long userid){
-       return commentservice.registComment(commentRequestDto,userid);
+                                 @AuthenticationPrincipal UserDetailsImpl userDetails){
+        Long userid = userDetails.getUser().getId();
+        return commentservice.registComment(commentRequestDto,userid);
     }
 
     @DeleteMapping("/api/comment/{commentid}")

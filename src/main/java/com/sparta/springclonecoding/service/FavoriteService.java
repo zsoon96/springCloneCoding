@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class LikeService {
+public class FavoriteService {
     private final FavoriteRepository likeRepository;
     private final PostRepository postRepository;
 
@@ -22,16 +22,17 @@ public class LikeService {
         );
         FavoriteDto likeDto = new FavoriteDto(userid);
         Favorite like = new Favorite(likeDto);
-        post.getLikes().add(like);
+        post.getFavorites().add(like);
+        likeRepository.save(like);
     }
 
     public void unpressLike(Long postid,Long userid){
         Post post = postRepository.findById(postid).orElseThrow(
                 ()-> new IllegalArgumentException("해당 포스트가 없습니다.")
         );
-        for(int i=0; i<post.getLikes().size(); i++) {
-            if(post.getLikes().get(i).getUserid()==userid){
-                post.getLikes().remove(i);
+        for(int i=0; i<post.getFavorites().size(); i++) {
+            if(post.getFavorites().get(i).getUserid()==userid){
+                post.getFavorites().remove(i);
             }
         }
 

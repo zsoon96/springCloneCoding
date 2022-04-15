@@ -6,8 +6,11 @@ import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
+import com.sparta.springclonecoding.repository.CommentRepository;
+import com.sparta.springclonecoding.repository.FavoriteRepository;
 import com.sparta.springclonecoding.repository.PostRepository;
 import com.sparta.springclonecoding.repository.UserRepository;
+import com.sparta.springclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +22,11 @@ import java.util.List;
 public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final FavoriteRepository likeRepository;
+    private final CommentRepository commentRepository;
 
-    public ProfileDto showProfile(Long userid){
+    public ProfileDto showProfile(UserDetailsImpl userDetails){
+        Long userid = userDetails.getUser().getId();
         User user = userRepository.findById(userid).orElseThrow(
                 () -> new IllegalArgumentException("없는 유저입니다."));
         int postCnt = postRepository.countAllByUserId(userid);
@@ -28,17 +34,18 @@ public class PostService {
         return profileDto;
     }
 
-    public DetailDto showDetail(Long postid,Long userid){
+    public DetailDto showDetail(Long postid,UserDetailsImpl userDetails){
         Post post =postRepository.findById(postid).orElseThrow(
                 ()-> new IllegalArgumentException("없는 포스트입니다"));
         Boolean myLike = false;
-        for(int i =0; i<post.getLikes().size(); i++){
-            if (post.getLikes().get(i).getUserid() == userid) {
+        Long userid =userDetails.getUser().getId();
+        for(int i =0; i<post.getFavorites().size(); i++){
+            if (post.getFavorites().get(i).getUserid() == userid) {
                 myLike = true;
                 break;
             }
         }
-        return new DetailDto(post,post.getLikes().size(),myLike);
+        return new DetailDto(post,post.getFavorites().size(),myLike);
     }
 
 
@@ -54,20 +61,16 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         for (Post post : posts) {
-            System.out.println(post);
-            System.out.println(post.getComments());
-            System.out.println(post.getLikes());
             int commentCnt = 0;
-//            if (!post.getComments().isEmpty()) {
-//                commentCnt = post.getComments().size();
-//            }
+            if (!post.getComments().isEmpty()) {
+                commentCnt = post.getComments().size();
+            }
 
             int likeCnt = 0;
-//            if (!post.getLikes().isEmpty()) {
-//                likeCnt = post.getLikes().size();
-//            }
-            System.out.println(commentCnt);
-            System.out.println(likeCnt);
+            if (!post.getFavorites().isEmpty()) {
+                likeCnt = post.getFavorites().size();
+            }
+
             PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,likeCnt);
             postResponseDtos.add(postResponseDto);
         }
