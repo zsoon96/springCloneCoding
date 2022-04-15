@@ -38,8 +38,9 @@ public class PostController {
     
     // 게시글 삭제
     @DeleteMapping("/api/posts/{postId}")
-    public Long deletePost (@PathVariable Long postId){
+    public Long deletePost (@PathVariable Long postId) {
         return postService.delPost(postId);
+    }
 
 
     // 프로필 보기

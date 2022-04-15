@@ -59,8 +59,6 @@ public class PostService {
         return new DetailDto(post,post.getFavorites().size(),myLike);
     }
 
-    private UserRepository userRepository;
-
     // 게시글 저장
     public Post postPost (PostRequestDto postRequestDto, UserDetailsImpl userDetails){
         Post post = new Post(postRequestDto, userDetails);
@@ -87,7 +85,7 @@ public class PostService {
             // 해당 게시물에 대한 사용자의 좋아요 확인 -> 각 포스트마다 좋아요한 리스트에 userid가 사용자와 일치하면 true로 변환
             boolean myLike = false;
             for (int i = 0; i < post.getFavorites().size(); i++) {
-                if (post.getFavorites().get(i).getUserId() == userId){
+                if (post.getFavorites().get(i).getUserid() == userId){
                    myLike = true;
                 }
             }
