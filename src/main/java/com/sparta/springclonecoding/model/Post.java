@@ -1,8 +1,10 @@
 package com.sparta.springclonecoding.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.sparta.springclonecoding.dto.PostRequestDto;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -13,7 +15,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Post {
+public class Post extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -37,4 +39,11 @@ public class Post {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
+
+    public Post(PostRequestDto postRequestDto, Long userid){
+        this.imageUrl = postRequestDto.getImageUrl();
+        this.content = postRequestDto.getContent();
+        this.userId = userid;
+    }
 }
+
