@@ -28,10 +28,9 @@ public class User {
 
     private String profile;
 
-    private String nickname;
-
-
     @OneToMany
     @JoinColumn
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
+
+    private String nickname;
 }

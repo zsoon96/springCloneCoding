@@ -15,10 +15,9 @@ public class Favorite {
     @Column
     private Long id;
 
-
     private Long userid;
 
-    public Favorite(FavoriteDto likeDto){
-        this.userid = likeDto.getUserid();
+    public Favorite(FavoriteDto favoriteDto){
+        this.userid = favoriteDto.getUserid();
     }
 }

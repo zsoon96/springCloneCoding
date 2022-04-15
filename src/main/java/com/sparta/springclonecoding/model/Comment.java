@@ -19,7 +19,7 @@ public class Comment extends Timestamped{
 
     private Long userid;
 
-    public Comment(CommentRequestDto commentRequestDto,Long userid){
+    public Comment(CommentRequestDto commentRequestDto, Long userid){
         this.content = commentRequestDto.getContent();
         this.userid = userid;
     }

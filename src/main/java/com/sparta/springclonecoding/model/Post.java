@@ -1,16 +1,19 @@
 package com.sparta.springclonecoding.model;
 
+import com.sparta.springclonecoding.dto.PostRequestDto;
+import com.sparta.springclonecoding.security.UserDetailsImpl;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sparta.springclonecoding.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Getter
 @Entity
@@ -31,18 +34,23 @@ public class Post extends Timestamped{
     @JoinColumn
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn
+    private List<Favorite> favorites = new ArrayList<>();
+  
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
-    @OneToMany
-    @JoinColumn
-    private List<Favorite> favorites = new ArrayList<>();
-
-    public Post(PostRequestDto postRequestDto, Long userid){
-        this.imageUrl = postRequestDto.getImageUrl();
+    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
         this.content = postRequestDto.getContent();
-        this.userId = userid;
+        this.imageUrl = postRequestDto.getImageUrl();
+        this.userId = userDetails.getUser().getId();
+    }
+
+    public void update(PostRequestDto postRequestDto) {
+        this.content = postRequestDto.getContent();
+
     }
 }
 
