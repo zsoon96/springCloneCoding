@@ -1,5 +1,6 @@
 package com.sparta.springclonecoding.model;
 
+import com.sparta.springclonecoding.dto.FavoriteDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,9 @@ public class Favorite {
     @Column
     private Long id;
 
-    private Long userId;
+    private Long userid;
 
+    public Favorite(FavoriteDto favoriteDto){
+        this.userid = favoriteDto.getUserid();
+    }
 }

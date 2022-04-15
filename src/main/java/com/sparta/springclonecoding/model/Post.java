@@ -5,6 +5,11 @@ import com.sparta.springclonecoding.security.UserDetailsImpl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sparta.springclonecoding.dto.PostRequestDto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +18,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Post extends Timestamped {
+public class Post extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -32,6 +37,10 @@ public class Post extends Timestamped {
     @OneToMany
     @JoinColumn
     private List<Favorite> favorites = new ArrayList<>();
+  
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime createdAt;
 
     public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
         this.content = postRequestDto.getContent();
@@ -39,8 +48,9 @@ public class Post extends Timestamped {
         this.userId = userDetails.getUser().getId();
     }
 
-
     public void update(PostRequestDto postRequestDto) {
         this.content = postRequestDto.getContent();
+
     }
 }
+

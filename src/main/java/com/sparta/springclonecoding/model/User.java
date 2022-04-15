@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,11 +26,11 @@ public class User {
         this.password = password;
     }
 
-//    private String profile;
-//
-//    private String nickname;
+    private String profile;
 
     @OneToMany
     @JoinColumn
     private List<Post> posts = new ArrayList<>();
+
+    private String nickname;
 }
