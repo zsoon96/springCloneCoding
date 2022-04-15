@@ -1,8 +1,10 @@
 package com.sparta.springclonecoding.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sparta.springclonecoding.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -13,7 +15,8 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Post {
+@ToString
+public class Post{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
@@ -27,14 +30,19 @@ public class Post {
 
     @OneToMany
     @JoinColumn(name = "comment_id")
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @OneToMany
     @JoinColumn(name = "like_id")
-    private List<Like> likes = new ArrayList<>();
+    private List<Like> likes;
 
-    @CreatedDate
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
+//    @CreatedDate
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    private LocalDateTime createdAt;
 
+    public Post(PostRequestDto postRequestDto,Long userid){
+        this.imageUrl = postRequestDto.getImage();
+        this.content = postRequestDto.getContent();
+        this.userId = userid;
+    }
 }

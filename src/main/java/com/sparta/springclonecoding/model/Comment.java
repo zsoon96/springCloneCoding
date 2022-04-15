@@ -1,5 +1,6 @@
 package com.sparta.springclonecoding.model;
 
+import com.sparta.springclonecoding.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +17,10 @@ public class Comment {
 
     private String content;
 
-    private Long userId;
+    private Long userid;
+
+    public Comment(CommentRequestDto commentRequestDto,Long userid){
+        this.content = commentRequestDto.getContent();
+        this.userid = userid;
+    }
 }
