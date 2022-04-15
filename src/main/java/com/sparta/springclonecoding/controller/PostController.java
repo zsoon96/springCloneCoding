@@ -19,8 +19,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/api/posts")
-    public Post savePost (@RequestBody PostRequestDto postRequestDto) {
-       return postService.postPost(postRequestDto);
+    public Post savePost (@RequestBody PostRequestDto postRequestDto,
+                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+       return postService.postPost(postRequestDto,userDetails);
     }
 
     @GetMapping("/api/posts")

@@ -50,9 +50,15 @@ public class PostService {
 
 
     // 게시물 저장
-    public Post postPost (PostRequestDto postRequestDto){
+    public Post postPost (PostRequestDto postRequestDto,UserDetailsImpl userDetails){
         Long likeCnt = 0L; // 좋아요 수 초기화
-        Post post = new Post(postRequestDto,likeCnt);
+
+        Long userid = userDetails.getUser().getId();
+        User user = userRepository.findById(userid).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저입니다람쥐")
+        );
+        Post post = new Post(postRequestDto,userid);
+        user.getPosts().add(post);
         return postRepository.save(post);
     }
 

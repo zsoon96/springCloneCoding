@@ -15,7 +15,7 @@ public class CommentController {
     private final CommentService commentservice;
 
     // 댓글 작성
-    @PostMapping("/api/comment/{userid}")
+    @PostMapping("/api/comment")
     public Comment registComment(@RequestBody CommentRequestDto commentRequestDto,
                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
         Long userid = userDetails.getUser().getId();
