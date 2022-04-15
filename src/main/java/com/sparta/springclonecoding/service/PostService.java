@@ -54,9 +54,21 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         for (Post post : posts) {
-            Long commentCnt = (long) post.getComments().size();
-//            Long likeCnt = (long) post.getLikes().size();
-            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt);
+            System.out.println(post);
+            System.out.println(post.getComments());
+            System.out.println(post.getLikes());
+            int commentCnt = 0;
+//            if (!post.getComments().isEmpty()) {
+//                commentCnt = post.getComments().size();
+//            }
+
+            int likeCnt = 0;
+//            if (!post.getLikes().isEmpty()) {
+//                likeCnt = post.getLikes().size();
+//            }
+            System.out.println(commentCnt);
+            System.out.println(likeCnt);
+            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,likeCnt);
             postResponseDtos.add(postResponseDto);
         }
         return postResponseDtos;

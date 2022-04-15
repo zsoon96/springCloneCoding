@@ -1,10 +1,10 @@
 package com.sparta.springclonecoding.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sparta.springclonecoding.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.sparta.springclonecoding.dto.PostRequestDto;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -31,14 +31,13 @@ public class Post extends Timestamped{
     @JoinColumn
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn
-    private List<Like> likes = new ArrayList<>();
-
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
+    @OneToMany
+    @JoinColumn
+    private List<Favorite> favorites = new ArrayList<>();
 
     public Post(PostRequestDto postRequestDto, Long userid){
         this.imageUrl = postRequestDto.getImageUrl();

@@ -1,6 +1,6 @@
 package com.sparta.springclonecoding.model;
 
-import com.sparta.springclonecoding.dto.LikeDto;
+import com.sparta.springclonecoding.dto.FavoriteDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Like {
+public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -19,7 +19,7 @@ public class Like {
 
     private Long userid;
 
-    public Like(LikeDto likeDto){
+    public Favorite(FavoriteDto likeDto){
         this.userid = likeDto.getUserid();
     }
 }
