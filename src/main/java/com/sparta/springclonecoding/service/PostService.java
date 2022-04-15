@@ -2,14 +2,17 @@ package com.sparta.springclonecoding.service;
 
 import com.sparta.springclonecoding.dto.DetailDto;
 import com.sparta.springclonecoding.dto.PostRequestDto;
+import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
-import com.sparta.springclonecoding.repository.LikeRepository;
 import com.sparta.springclonecoding.repository.PostRepository;
 import com.sparta.springclonecoding.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -53,9 +56,21 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         for (Post post : posts) {
-            Long commentCnt = (long) post.getComments().size();
-//            Long likeCnt = (long) post.getLikes().size();
-            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt);
+            System.out.println(post);
+            System.out.println(post.getComments());
+            System.out.println(post.getLikes());
+            int commentCnt = 0;
+//            if (!post.getComments().isEmpty()) {
+//                commentCnt = post.getComments().size();
+//            }
+
+            int likeCnt = 0;
+//            if (!post.getLikes().isEmpty()) {
+//                likeCnt = post.getLikes().size();
+//            }
+            System.out.println(commentCnt);
+            System.out.println(likeCnt);
+            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,likeCnt);
             postResponseDtos.add(postResponseDto);
         }
         return postResponseDtos;
