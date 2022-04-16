@@ -32,15 +32,10 @@ public class PostResponseDto {
         this.myLike = myLike;
         this.commentCnt = commentCnt;
         this.createdAt = post.getCreatedAt();
-    }
-
-    public PostResponseDto(Post post,int commentCnt, int favoriteCnt){
-        this.imageUrl = post.getImageUrl();
-        this.content = post.getContent();
-        this.commentCnt = commentCnt;
-        this.favoriteCnt = favoriteCnt;
         this.comments = post.getComments();
         this.createdAt = post.getCreatedAt();
         this.favorites = post.getFavorites();
     }
+
+
 }
