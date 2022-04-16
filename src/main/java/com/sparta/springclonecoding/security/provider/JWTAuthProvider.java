@@ -34,6 +34,7 @@ public class JWTAuthProvider implements AuthenticationProvider {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));;
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 

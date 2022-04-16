@@ -22,11 +22,6 @@ public class User {
     @Column(unique = true)
     private String password;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
     private String profile;
 
     @OneToMany
@@ -34,4 +29,10 @@ public class User {
     private List<Post> posts = new ArrayList<>();
 
     private String nickname;
+
+    public User(String username, String nickname, String password) {
+        this.username = username;
+        this.nickname = nickname;
+        this.password = password;
+    }
 }
