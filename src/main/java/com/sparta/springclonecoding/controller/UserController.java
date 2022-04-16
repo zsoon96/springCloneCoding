@@ -36,7 +36,6 @@ public class UserController {
 
             return new ResultDto(false, errors.get(0));
         }
-        userService.save(requestDto);
         return userService.save(requestDto);
     }
 
