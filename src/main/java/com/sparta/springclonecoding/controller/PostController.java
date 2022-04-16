@@ -17,41 +17,44 @@ import java.util.List;
 @RestController
 public class PostController {
     private final PostService postService;
-    
+
     // 게시글 작성
     @PostMapping("/api/posts")
 
-    public Post savePost (@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-       return postService.postPost(postRequestDto, userDetails);
+    public Post savePost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.postPost(postRequestDto, userDetails);
     }
+
     // 게시글 조회
     @GetMapping("/api/posts")
     public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPost(userDetails);
     }
-    
+
     // 게시글 수정
     @PutMapping("/api/posts/{postId}")
-    public Long updatePost (@PathVariable Long postId,@RequestBody PostRequestDto postRequestDto ) {
+    public Long updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto) {
         return postService.putPost(postId, postRequestDto);
     }
-    
+
     // 게시글 삭제
     @DeleteMapping("/api/posts/{postId}")
-    public Long deletePost (@PathVariable Long postId){
+    public Long deletePost(@PathVariable Long postId) {
         return postService.delPost(postId);
+    }
 
 
     // 프로필 보기
     @GetMapping("/api/posts/mypost")
-    public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
-       return postService.showProfile(userDetails);
+    public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.showProfile(userDetails);
     }
-      
+
     // 상세페이지
     @GetMapping("/api/detail/{postid}")
     public DetailDto showDetail(@PathVariable Long postid,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return postService.showDetail(postid,userDetails);
+                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.showDetail(postid, userDetails);
     }
 }
+
