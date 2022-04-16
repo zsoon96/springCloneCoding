@@ -10,7 +10,9 @@ import com.sparta.springclonecoding.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,9 +22,10 @@ public class PostController {
     
     // 게시글 작성
     @PostMapping("/api/posts")
-
-    public Post savePost (@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-       return postService.postPost(postRequestDto, userDetails);
+    public Post savePost (@RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        System.out.println(content);
+        System.out.println(multipartFile);
+        return postService.postPost(multipartFile,content, userDetails);
     }
     // 게시글 조회
     @GetMapping("/api/posts")
@@ -38,10 +41,9 @@ public class PostController {
     
     // 게시글 삭제
     @DeleteMapping("/api/posts/{postId}")
-    public Long deletePost (@PathVariable Long postId){
+    public Long deletePost (@PathVariable Long postId) {
         return postService.delPost(postId);
-
-
+    }
     // 프로필 보기
     @GetMapping("/api/posts/mypost")
     public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){

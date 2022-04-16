@@ -22,8 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final FavoriteRepository favoriteRepository;
     private final CommentRepository commentRepository;
+    private final S3Uploader s3Uploader;
 
     public ProfileDto showProfile(UserDetailsImpl userDetails){
         Long userid = userDetails.getUser().getId();
@@ -59,11 +62,11 @@ public class PostService {
         return new DetailDto(post,post.getFavorites().size(),myLike);
     }
 
-    private UserRepository userRepository;
 
     // 게시글 저장
-    public Post postPost (PostRequestDto postRequestDto, UserDetailsImpl userDetails){
-        Post post = new Post(postRequestDto, userDetails);
+    public Post postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
+        String imageUrl = s3Uploader.upload(multipartFile,"static");
+        Post post = new Post(content,imageUrl, userDetails);
         User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
                 () -> new IllegalArgumentException("계정이 없습니다.")
         );
@@ -82,12 +85,10 @@ public class PostService {
         }
 
         for (Post post : posts) {
-
-
             // 해당 게시물에 대한 사용자의 좋아요 확인 -> 각 포스트마다 좋아요한 리스트에 userid가 사용자와 일치하면 true로 변환
             boolean myLike = false;
             for (int i = 0; i < post.getFavorites().size(); i++) {
-                if (post.getFavorites().get(i).getUserId() == userId){
+                if (post.getFavorites().get(i).getUserid() == userId){
                    myLike = true;
                 }
             }

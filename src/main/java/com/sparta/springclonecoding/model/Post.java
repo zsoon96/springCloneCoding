@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +43,9 @@ public class Post extends Timestamped{
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
-    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
-        this.content = postRequestDto.getContent();
-        this.imageUrl = postRequestDto.getImageUrl();
+    public Post(String content , String imageUrl,UserDetailsImpl userDetails) {
+        this.content = content;
+        this.imageUrl = imageUrl;
         this.userId = userDetails.getUser().getId();
     }
 
