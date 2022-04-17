@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class PostResponseDto {
+    private Long postid;
     private String imageUrl;
     private String content;
     private int favoriteCnt; // 좋아요 수
@@ -26,6 +27,7 @@ public class PostResponseDto {
     private List<Favorite> favorites;
 
     public PostResponseDto(Post post, int commentCnt, int favoriteCnt, boolean myLike) {
+        this.postid = post.getId();
         this.imageUrl = post.getImageUrl();
         this.content = post.getContent();
         this.favoriteCnt = favoriteCnt;
