@@ -37,7 +37,8 @@ public class FavoriteService {
         Post post = postRepository.findById(postid).orElseThrow(
                 ()-> new IllegalArgumentException("게시물이 없다람쥐")
         );
-        Optional<Favorite> favorite = favoriteRepository.findById(userid);
+
+        Optional<Favorite> favorite = favoriteRepository.findByUserid(userid);
         if(!favorite.isPresent()) {
             throw new IllegalArgumentException("취소할 좋아요가 없습니다람쥐 ");
         }

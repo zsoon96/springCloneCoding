@@ -22,7 +22,7 @@ public class PostController {
     
     // 게시글 작성
     @PostMapping("/api/posts")
-    public Post savePost (@RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public Post savePost (@RequestParam("imageFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         System.out.println(content);
         System.out.println(multipartFile);
         return postService.postPost(multipartFile,content, userDetails);
