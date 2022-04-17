@@ -19,7 +19,11 @@ import java.util.List;
 @RestController
 public class PostController {
     private final PostService postService;
-    
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String nullex(IllegalArgumentException e) {
+        return e.getMessage();
+    }
     // 게시글 작성
     @PostMapping("/api/posts")
     public Post savePost (@RequestParam("imageFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
