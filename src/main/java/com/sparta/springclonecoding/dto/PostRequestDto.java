@@ -8,6 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class PostRequestDto {
     private String content;
-//    private String imgfile; // 파일 변환 여부 확인
     private MultipartFile multipartFile;
 }
