@@ -51,12 +51,7 @@ public class PostService {
     }
 
     // 게시글 저장
-    public ResultDto postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
-        // 이미지 없을 경우, 예외 처리
-        if (multipartFile.isEmpty()){
-            return new ResultDto(false,"사진을 첨부해주세요.");
-        }
-
+    public void postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
         String imageUrl = s3Service.upload(multipartFile);
         Post post = new Post(content,imageUrl,userDetails);
         User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
@@ -64,7 +59,6 @@ public class PostService {
         );
         user.getPosts().add(post);
         postRepository.save(post);
-        return new ResultDto(true,"등록 완료");
     }
 
     // 게시글 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기

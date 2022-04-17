@@ -21,7 +21,11 @@ public class PostController {
     // 게시글 작성
     @PostMapping("/api/posts")
     public ResultDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
-        return postService.postPost(multipartFile, content, userDetails);
+        if (multipartFile.isEmpty()){
+            return new ResultDto(false,"사진을 첨부해주세요.");
+        }
+        postService.postPost(multipartFile, content, userDetails);
+        return new ResultDto(true,"등록 완료");
     }
 
     // 게시글 조회
