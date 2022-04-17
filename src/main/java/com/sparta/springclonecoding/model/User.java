@@ -25,14 +25,15 @@ public class User {
     private String profile;
 
     @OneToMany
-    @JoinColumn
+    @JoinColumn(name = "postid")
     private List<Post> posts = new ArrayList<>();
 
     private String nickname;
 
-    public User(String username, String nickname, String password) {
+    public User(String username, String nickname, String password,String profile) {
         this.username = username;
         this.nickname = nickname;
         this.password = password;
+        this.profile = profile;
     }
 }

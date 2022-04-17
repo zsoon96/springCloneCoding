@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentservice;
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String nullex(IllegalArgumentException e) {
+        return e.getMessage();
+    }
     // 댓글 작성
     @PostMapping("/api/comment")
     public Comment registComment(@RequestBody CommentRequestDto commentRequestDto,

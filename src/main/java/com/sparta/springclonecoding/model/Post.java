@@ -29,20 +29,20 @@ public class Post extends Timestamped{
     private String content;
 
     @OneToMany
-    @JoinColumn
+    @JoinColumn(name = "commentid")
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany
-    @JoinColumn
+    @JoinColumn(name = "favoriteId")
     private List<Favorite> favorites = new ArrayList<>();
   
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
-    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
-        this.content = postRequestDto.getContent();
-        this.imageUrl = postRequestDto.getImageUrl();
+    public Post(String content , String imageUrl,UserDetailsImpl userDetails) {
+        this.content = content;
+        this.imageUrl = imageUrl;
         this.userId = userDetails.getUser().getId();
     }
 
