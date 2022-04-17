@@ -17,7 +17,11 @@ import java.util.List;
 @RestController
 public class PostController {
     private final PostService postService;
-    
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String nullex(IllegalArgumentException e) {
+        return e.getMessage();
+    }
     // 게시글 작성
     @PostMapping("/api/posts")
     public ResultDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
@@ -26,6 +30,7 @@ public class PostController {
         }
         postService.postPost(multipartFile, content, userDetails);
         return new ResultDto(true,"등록 완료");
+
     }
 
     // 게시글 조회
