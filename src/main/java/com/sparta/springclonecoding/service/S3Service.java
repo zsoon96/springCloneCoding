@@ -53,10 +53,13 @@ public class S3Service {
 
         if(!"".equals(currentFilePath) && currentFilePath != null) {
             boolean isExistObject = amazonS3Client.doesObjectExist(bucket, currentFilePath);
+            System.out.println(isExistObject);
             if (!isExistObject) {
                 amazonS3Client.deleteObject(bucket, currentFilePath);
+                System.out.println("기존 파일 삭제");
             }
         }
+        System.out.println("기존 파일 없음");
 
         try(InputStream inputStream = file.getInputStream()) {
             amazonS3Client.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMetadata)

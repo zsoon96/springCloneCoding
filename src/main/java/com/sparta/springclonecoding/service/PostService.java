@@ -51,7 +51,8 @@ public class PostService {
     }
 
     // 게시글 저장
-    public void postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
+    public PostResponseDto postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
+        // S3에 저장한 이미지 경로 선언
         String imageUrl = s3Service.upload(multipartFile);
         Post post = new Post(content,imageUrl,userDetails);
         User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
@@ -59,6 +60,9 @@ public class PostService {
         );
         user.getPosts().add(post);
         postRepository.save(post);
+        boolean myLike = false;
+        PostResponseDto responseDto = new PostResponseDto(post,myLike);
+        return responseDto;
     }
 
     // 게시글 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기
@@ -100,12 +104,14 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public void putPost(Long postId, MultipartFile multipartFile, String content) throws IOException {
+    public PostResponseDto putPost(Long postId, MultipartFile multipartFile, String content) throws IOException {
         String imageUrl = s3Service.upload(multipartFile,"static");
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 없습니다.")
         );
         post.update(imageUrl, content);
+        PostResponseDto responseDto = new PostResponseDto(post);
+        return responseDto;
     }
 
 

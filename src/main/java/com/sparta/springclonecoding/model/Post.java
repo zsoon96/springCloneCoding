@@ -40,7 +40,7 @@ public class Post extends Timestamped{
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
-    public Post(String content , String imageUrl,UserDetailsImpl userDetails) {
+    public Post(String content, String imageUrl, UserDetailsImpl userDetails) {
         this.content = content;
         this.imageUrl = imageUrl;
         this.userId = userDetails.getUser().getId();
