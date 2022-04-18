@@ -70,6 +70,7 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         Long userId = userDetails.getUser().getId();
+
         if ( userId == null ) {
             throw new IllegalArgumentException("계정이 없습니다.");
         }
@@ -109,6 +110,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 없습니다.")
         );
+
         post.update(imageUrl, content);
         PostResponseDto responseDto = new PostResponseDto(post);
         return responseDto;
