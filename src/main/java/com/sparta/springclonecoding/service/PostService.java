@@ -3,6 +3,8 @@ package com.sparta.springclonecoding.service;
 import com.sparta.springclonecoding.dto.*;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
+import com.sparta.springclonecoding.repository.CommentRepository;
+import com.sparta.springclonecoding.repository.FavoriteRepository;
 import com.sparta.springclonecoding.repository.PostRepository;
 import com.sparta.springclonecoding.repository.UserRepository;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
@@ -23,7 +25,6 @@ public class PostService {
     private final FavoriteRepository favoriteRepository;
     private final CommentRepository commentRepository;
     private final S3Service s3Service;
-    private final S3Uploader s3Uploader;
 
     public ProfileDto showProfile(UserDetailsImpl userDetails){
         Long userid = userDetails.getUser().getId();
@@ -49,14 +50,14 @@ public class PostService {
     }
 
     // 게시글 저장
-    public void postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
+    public Post postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
         String imageUrl = s3Service.upload(multipartFile);
         Post post = new Post(content,imageUrl,userDetails);
         User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
                 () -> new IllegalArgumentException("계정이 없습니다.")
         );
         user.getPosts().add(post);
-        postRepository.save(post);
+        return postRepository.save(post);
     }
 
     // 게시글 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기
@@ -76,6 +77,7 @@ public class PostService {
                    myLike = true;
                 }
             }
+            User user = userRepository.findByPosts(post);
 
             // 댓글 갯수
             int commentCnt = 0;
@@ -88,7 +90,7 @@ public class PostService {
             if (!post.getFavorites().isEmpty()) {
                 favoriteCnt = post.getFavorites().size();
             }
-            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,favoriteCnt,myLike);
+            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,favoriteCnt,myLike,user);
 
             postResponseDtos.add(postResponseDto);
         }
@@ -98,12 +100,13 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public void putPost(Long postId, MultipartFile multipartFile, String content) throws IOException {
+    public Post putPost(Long postId, MultipartFile multipartFile, String content) throws IOException {
         String imageUrl = s3Service.upload(multipartFile,"static");
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 없습니다.")
         );
         post.update(imageUrl, content);
+        return post;
     }
 
 

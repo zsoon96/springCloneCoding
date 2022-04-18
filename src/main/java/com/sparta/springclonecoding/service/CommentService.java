@@ -20,7 +20,7 @@ public class CommentService {
     private final Validator validator;
 
     @Transactional
-    public Comment registComment(CommentRequestDto commentRequestDto,Long userid){
+    public Post registComment(CommentRequestDto commentRequestDto,Long userid){
         Post post = postRepository.findById(commentRequestDto.getPostid()).orElseThrow(
                 ()-> new IllegalArgumentException("해당 포스트가 없습니다.")
         );
@@ -28,7 +28,7 @@ public class CommentService {
         Comment comment = new Comment(commentRequestDto,userid);
         post.getComments().add(comment);
         commentRepository.save(comment);
-        return comment;
+        return post;
     }
 
 

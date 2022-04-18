@@ -25,8 +25,12 @@ public class User {
     private String profile;
 
     @OneToMany
-    @JoinColumn(name = "postid")
+    @JoinColumn
     private List<Post> posts = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn
+    private List<Favorite> favorites = new ArrayList<>();
 
     private String nickname;
 
