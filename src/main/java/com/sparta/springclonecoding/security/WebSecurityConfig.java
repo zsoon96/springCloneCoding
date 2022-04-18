@@ -6,32 +6,22 @@ import com.sparta.springclonecoding.security.filter.JwtAuthFilter;
 import com.sparta.springclonecoding.security.jwt.HeaderTokenExtractor;
 import com.sparta.springclonecoding.security.provider.FormLoginAuthProvider;
 import com.sparta.springclonecoding.security.provider.JWTAuthProvider;
-import lombok.Value;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Configuration
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
@@ -95,14 +85,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").permitAll()
                 .anyRequest()
                 .permitAll()
-                .and()
-                // oauth 로그인
-                .oauth2Login()
-                .loginPage("/oauth/login.html")
-                .clientRegistrationRepository(clientRegistrationRepository())
-                .authorizedClientService(authorizedClientService())
-                .defaultSuccessUrl("/oauth/login_success")
-                .failureUrl("/oauth/login_fail")
                 .and()
                 // [로그아웃 기능]
                 .logout()
@@ -189,54 +171,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    // facebook
-    private static String CLIENT_PROPERTY_KEY = "spring.security.oauth2.client.registration.";
-
-    private static List<String> clients;
-
-    @Value("${spring.social.auths}")
-    String socialAuths;
-
-    @Autowired
-    private Environment env;
-
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        clients = Arrays.asList(socialAuths.split(","));
-        List<ClientRegistration> registrations = clients.stream()
-                .map(c -> getRegistration(c))
-                .filter(registration -> registration != null)
-                .collect(Collectors.toList());
-
-        return new InMemoryClientRegistrationRepository(registrations);
-    }
-
-    private ClientRegistration getRegistration(String client) {
-        String clientId = env.getProperty(
-                CLIENT_PROPERTY_KEY + client + ".client-id");
-
-        if (clientId == null) {
-            return null;
-        }
-
-        String clientSecret = env.getProperty(
-                CLIENT_PROPERTY_KEY + client + ".client-secret");
-
-        if (client.equals("google")) {
-            return CommonOAuth2Provider.GOOGLE.getBuilder(client)
-                    .clientId(clientId).clientSecret(clientSecret).build();
-        }
-        if (client.equals("facebook")) {
-            return CommonOAuth2Provider.FACEBOOK.getBuilder(client)
-                    .clientId(clientId).clientSecret(clientSecret).build();
-        }
-        return null;
-    }
-
-    @Bean
-    public OAuth2AuthorizedClientService authorizedClientService(){
-        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
-    }
 
 
 }
