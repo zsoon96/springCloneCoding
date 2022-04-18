@@ -41,11 +41,16 @@ public class FavoriteService {
 
         Optional<Favorite> favorite = favoriteRepository.findByUserid(userid);
         validator.alreadyLike(!favorite.isPresent(), "취소할 좋아요가 없습니다람쥐 ");
+        int num = 0;
         for(int i=0; i<post.getFavorites().size(); i++) {
             if(post.getFavorites().get(i).getUserid()==userid){
-                post.getFavorites().remove(i);
+//                post.getFavorites().remove(i);
+                num = i;
+                System.out.println("아무거나");
+                break;
             }
         }
+        post.getFavorites().remove(num);
 
     }
 }

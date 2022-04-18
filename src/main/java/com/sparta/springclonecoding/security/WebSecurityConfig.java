@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Configuration
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
@@ -80,6 +81,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
+                .antMatchers("/oauth_login").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
@@ -167,6 +170,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 
 
 }
