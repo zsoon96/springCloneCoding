@@ -4,6 +4,7 @@ import com.sparta.springclonecoding.dto.DetailDto;
 import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.dto.ResultDto;
+import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,11 @@ public class PostController {
     }
     // 게시글 작성
     @PostMapping("/api/posts")
-    public ResultDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+    public Post savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         if (multipartFile.isEmpty()){
-            return new ResultDto(false,"사진을 첨부해주세요.");
+            throw new IllegalArgumentException("사진을 첨부해 주세용!");
         }
-        postService.postPost(multipartFile, content, userDetails);
-        return new ResultDto(true,"등록 완료");
-
+        return postService.postPost(multipartFile, content, userDetails);
     }
 
     // 게시글 조회
@@ -42,9 +41,8 @@ public class PostController {
     
     // 게시글 수정
     @PutMapping("/api/posts/{postId}")
-    public ResultDto updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content ) throws IOException {
-        postService.putPost(postId, multipartFile, content);
-        return new ResultDto(true, "수정 완료");
+    public Post updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content ) throws IOException {
+        return  postService.putPost(postId, multipartFile, content);
     }
     
     // 게시글 삭제
