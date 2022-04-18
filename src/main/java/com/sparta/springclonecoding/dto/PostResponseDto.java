@@ -5,6 +5,7 @@ package com.sparta.springclonecoding.dto;
 import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.model.Favorite;
 import com.sparta.springclonecoding.model.Post;
+import com.sparta.springclonecoding.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
@@ -20,13 +21,15 @@ public class PostResponseDto {
     private String content;
     private int favoriteCnt; // 좋아요 수
     private boolean myLike; // 해당 게시글에 대한 사용자의 좋아요 여부
+    private User user;
 
     private int commentCnt; // 댓글 갯수
     private LocalDateTime createdAt;
     private List<Comment> comments;
     private List<Favorite> favorites;
 
-    public PostResponseDto(Post post, int commentCnt, int favoriteCnt, boolean myLike) {
+    public PostResponseDto(Post post, int commentCnt, int favoriteCnt, boolean myLike, User user) {
+        this.user = user;
         this.postid = post.getId();
         this.imageUrl = post.getImageUrl();
         this.content = post.getContent();
