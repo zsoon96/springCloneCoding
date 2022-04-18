@@ -2,6 +2,7 @@ package com.sparta.springclonecoding.controller;
 
 import com.sparta.springclonecoding.dto.CommentRequestDto;
 import com.sparta.springclonecoding.model.Comment;
+import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
@@ -20,8 +21,8 @@ public class CommentController {
     }
     // 댓글 작성
     @PostMapping("/api/comment")
-    public Comment registComment(@RequestBody CommentRequestDto commentRequestDto,
-                                 @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Post registComment(@RequestBody CommentRequestDto commentRequestDto,
+                              @AuthenticationPrincipal UserDetailsImpl userDetails){
         Long userid = userDetails.getUser().getId();
         return commentservice.registComment(commentRequestDto,userid);
     }

@@ -3,6 +3,8 @@ package com.sparta.springclonecoding.service;
 import com.sparta.springclonecoding.dto.*;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
+import com.sparta.springclonecoding.repository.CommentRepository;
+import com.sparta.springclonecoding.repository.FavoriteRepository;
 import com.sparta.springclonecoding.repository.PostRepository;
 import com.sparta.springclonecoding.repository.UserRepository;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
@@ -23,7 +25,6 @@ public class PostService {
     private final FavoriteRepository favoriteRepository;
     private final CommentRepository commentRepository;
     private final S3Service s3Service;
-    private final S3Uploader s3Uploader;
 
     public ProfileDto showProfile(UserDetailsImpl userDetails){
         Long userid = userDetails.getUser().getId();
@@ -76,6 +77,7 @@ public class PostService {
                    myLike = true;
                 }
             }
+            User user = userRepository.findByPosts(post);
 
             // 댓글 갯수
             int commentCnt = 0;
@@ -88,7 +90,7 @@ public class PostService {
             if (!post.getFavorites().isEmpty()) {
                 favoriteCnt = post.getFavorites().size();
             }
-            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,favoriteCnt,myLike);
+            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,favoriteCnt,myLike,user);
 
             postResponseDtos.add(postResponseDto);
         }

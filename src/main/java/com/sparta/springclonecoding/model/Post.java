@@ -29,11 +29,11 @@ public class Post extends Timestamped{
     private String content;
 
     @OneToMany
-    @JoinColumn(name = "commentid")
+    @JoinColumn
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany
-    @JoinColumn(name = "favoriteId")
+    @JoinColumn
     private List<Favorite> favorites = new ArrayList<>();
   
     @CreatedDate

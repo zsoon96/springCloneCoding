@@ -1,11 +1,12 @@
 package com.sparta.springclonecoding.controller;
 
-import com.sparta.springclonecoding.dto.*;
-import com.sparta.springclonecoding.model.Post;
+import com.sparta.springclonecoding.dto.DetailDto;
+import com.sparta.springclonecoding.dto.PostResponseDto;
+import com.sparta.springclonecoding.dto.ProfileDto;
+import com.sparta.springclonecoding.dto.ResultDto;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
