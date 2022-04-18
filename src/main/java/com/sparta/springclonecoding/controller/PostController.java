@@ -1,12 +1,14 @@
 package com.sparta.springclonecoding.controller;
 
-import com.sparta.springclonecoding.dto.*;
+import com.sparta.springclonecoding.dto.DetailDto;
+import com.sparta.springclonecoding.dto.PostResponseDto;
+import com.sparta.springclonecoding.dto.ProfileDto;
+import com.sparta.springclonecoding.dto.ResultDto;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
 import com.sparta.springclonecoding.service.S3Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +20,17 @@ import java.util.List;
 @RestController
 public class PostController {
     private final PostService postService;
-    
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String nullex(IllegalArgumentException e) {
+        return e.getMessage();
+    }
     // 게시글 작성
     @PostMapping("/api/posts")
     public PostResponseDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+        if (multipartFile.isEmpty()){
+            throw new IllegalArgumentException("사진을 첨부해 주세용!");
+        }
         return postService.postPost(multipartFile, content, userDetails);
     }
 
@@ -33,8 +42,8 @@ public class PostController {
     
     // 게시글 수정
     @PutMapping("/api/posts/{postId}")
-    public PostResponseDto updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content ) throws IOException {
-        return postService.putPost(postId, multipartFile, content);
+    public PostResponseDto updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails ){
+        return  postService.putPost(postId, multipartFile, content, userDetails.getUser().getId());
     }
     
     // 게시글 삭제

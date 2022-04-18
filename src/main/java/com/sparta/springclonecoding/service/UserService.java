@@ -47,7 +47,7 @@ public class UserService {
         // 패스워드 암호화
         String password = passwordEncoder.encode(requestDto.getPassword());
 
-        User user = new User(username, nickname, password);
+        User user = new User(username, nickname, password,"https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392");
         userRepository.save(user);
         message = "회원가입 성공";
         return new ResultDto(true, message);

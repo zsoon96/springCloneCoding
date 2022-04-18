@@ -1,6 +1,7 @@
 package com.sparta.springclonecoding.service;
 
 import com.sparta.springclonecoding.dto.*;
+import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
 import com.sparta.springclonecoding.repository.CommentRepository;
@@ -9,6 +10,7 @@ import com.sparta.springclonecoding.repository.PostRepository;
 import com.sparta.springclonecoding.repository.UserRepository;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +26,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final FavoriteRepository favoriteRepository;
     private final CommentRepository commentRepository;
-//    private final S3Uploader s3Uploader;
     private final S3Service s3Service;
 
     public ProfileDto showProfile(UserDetailsImpl userDetails){
@@ -52,7 +53,6 @@ public class PostService {
 
     // 게시글 저장
     public PostResponseDto postPost (MultipartFile multipartFile, String content, UserDetailsImpl userDetails) throws IOException {
-        // S3에 저장한 이미지 경로 선언
         String imageUrl = s3Service.upload(multipartFile);
         Post post = new Post(content,imageUrl,userDetails);
         User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
@@ -60,9 +60,8 @@ public class PostService {
         );
         user.getPosts().add(post);
         postRepository.save(post);
-        boolean myLike = false;
-        PostResponseDto responseDto = new PostResponseDto(post,myLike);
-        return responseDto;
+
+        return getPostResponseDto(user.getId(), post);
     }
 
     // 게시글 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기
@@ -77,43 +76,59 @@ public class PostService {
 
         for (Post post : posts) {
             // 해당 게시물에 대한 사용자의 좋아요 확인 -> 각 포스트마다 좋아요한 리스트에 userid가 사용자와 일치하면 true로 변환
-            boolean myLike = false;
-            for (int i = 0; i < post.getFavorites().size(); i++) {
-                if (post.getFavorites().get(i).getUserid() == userId){
-                   myLike = true;
-                }
-            }
-
-            // 댓글 갯수
-            int commentCnt = 0;
-            if (!post.getComments().isEmpty()) {
-                commentCnt = post.getComments().size();
-            }
-
-            // 좋아요 수
-            int favoriteCnt = 0;
-            if (!post.getFavorites().isEmpty()) {
-                favoriteCnt = post.getFavorites().size();
-            }
-            PostResponseDto postResponseDto = new PostResponseDto(post,commentCnt,favoriteCnt,myLike);
+            PostResponseDto postResponseDto = getPostResponseDto(userId, post);
 
             postResponseDtos.add(postResponseDto);
         }
         return postResponseDtos;
     }
 
+    @NotNull
+    private PostResponseDto getPostResponseDto(Long userId, Post post) {
+        boolean myLike = false;
+        for (int i = 0; i < post.getFavorites().size(); i++) {
+            if (post.getFavorites().get(i).getUserid() == userId){
+               myLike = true;
+            }
+        }
+        User user = userRepository.findByPosts(post);
+
+        // 댓글 갯수
+        int commentCnt = 0;
+        if (!post.getComments().isEmpty()) {
+            commentCnt = post.getComments().size();
+        }
+
+        // 좋아요 수
+        int favoriteCnt = 0;
+        if (!post.getFavorites().isEmpty()) {
+            favoriteCnt = post.getFavorites().size();
+        }
+
+        List<CommentResponseDto> commentList = new ArrayList<>();
+
+        for(Comment comment : post.getComments()) {
+
+            String nickname = userRepository.findById(comment.getUserid()).get().getNickname();
+
+            CommentResponseDto commentResponseDto = new CommentResponseDto(comment, nickname);
+            commentList.add(commentResponseDto);
+        }
+
+        PostResponseDto postResponseDto = new PostResponseDto(post, commentList, commentCnt,favoriteCnt,myLike,user);
+        return postResponseDto;
+    }
+
 
     // 게시글 수정
     @Transactional
-    public PostResponseDto putPost(Long postId, MultipartFile multipartFile, String content) throws IOException {
+    public PostResponseDto putPost(Long postId, MultipartFile multipartFile, String content, Long userId){
         String imageUrl = s3Service.upload(multipartFile,"static");
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 없습니다.")
         );
-
         post.update(imageUrl, content);
-        PostResponseDto responseDto = new PostResponseDto(post);
-        return responseDto;
+        return getPostResponseDto(userId, post);
     }
 
 
