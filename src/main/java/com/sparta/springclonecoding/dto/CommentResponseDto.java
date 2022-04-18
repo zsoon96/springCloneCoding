@@ -18,5 +18,4 @@ public class CommentResponseDto {
         this.userid = comment.getUserid();
         this.nickname = nickname;
     }
-
 }
