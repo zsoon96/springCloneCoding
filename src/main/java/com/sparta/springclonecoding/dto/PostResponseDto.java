@@ -41,6 +41,4 @@ public class PostResponseDto {
         this.createdAt = post.getCreatedAt();
         this.favorites = post.getFavorites();
     }
-
-
 }
