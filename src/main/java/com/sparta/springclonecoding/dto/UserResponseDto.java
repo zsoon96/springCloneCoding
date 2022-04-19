@@ -5,11 +5,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class IsDto {
+public class UserResponseDto {
     private String username;
     private String nickname;
 
-    public IsDto(String username, String nickname) {
+    public UserResponseDto(String username, String nickname) {
         this.username = username;
         this.nickname = nickname;
     }

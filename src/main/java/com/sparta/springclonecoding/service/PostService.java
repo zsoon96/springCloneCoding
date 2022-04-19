@@ -7,8 +7,7 @@ import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
-import com.sparta.springclonecoding.repository.CommentRepository;
-import com.sparta.springclonecoding.repository.FavoriteRepository;
+import com.sparta.springclonecoding.repository.FollowRepository;
 import com.sparta.springclonecoding.repository.PostRepository;
 import com.sparta.springclonecoding.repository.UserRepository;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
@@ -27,17 +26,23 @@ import java.util.List;
 public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final FavoriteRepository favoriteRepository;
-    private final CommentRepository commentRepository;
     private final S3Service s3Service;
+    private final FollowRepository followRepository;
 
-    public ProfileDto showProfile(UserDetailsImpl userDetails){
-        Long userid = userDetails.getUser().getId();
+    // 회원 프로필
+    public ProfileDto showProfile(UserDetailsImpl userDetails, Long userid){
         User user = userRepository.findById(userid).orElseThrow(
                 () -> new IllegalArgumentException("없는 유저입니다."));
+        // 게시글 수
         int postCnt = postRepository.countAllByUserId(userid);
-        ProfileDto profileDto = new ProfileDto(user,postCnt);
-        return profileDto;
+        // 로그인 된 유저와 프로필 유저 일치 여부
+        boolean loginUser = userid.equals(userDetails.getUser().getId());
+        // 해당 프로필을 팔로우한 유저(팔로워)
+        Long userFollowerCnt = followRepository.countFollowerById(userid);
+        // 해당 프로필이 팔로우한 유저(팔로잉)
+        Long userFollowingCnt = followRepository.countFolloingById(userid);
+
+        return new ProfileDto(user, postCnt, loginUser, userFollowerCnt, userFollowingCnt);
     }
 
     // 상세 페이지 + 댓글 페이징 처리
@@ -144,5 +149,15 @@ public class PostService {
     public Long delPost(Long postId) {
         postRepository.deleteById(postId);
         return postId;
+    }
+
+    // 프로필 수정
+    @Transactional
+    public void editprofile(MultipartFile multipartFile,UserDetailsImpl userDetails) {
+        String imageUrl = s3Service.upload(multipartFile,"static");
+        User user = userRepository.findById(userDetails.getId()).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저입니다.")
+        );
+        user.update(imageUrl);
     }
 }

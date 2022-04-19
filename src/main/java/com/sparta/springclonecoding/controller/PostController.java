@@ -5,9 +5,7 @@ import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +37,7 @@ public class PostController {
     public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                           @PathVariable int postMinId) {
         return postService.getPost(userDetails, postMinId);
+
     }
     
     // 게시글 수정
@@ -55,16 +54,24 @@ public class PostController {
         return postService.delPost(postId);
     }
 
-    // 프로필 보기
-    @GetMapping("/api/posts/mypost")
-    public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
-       return postService.showProfile(userDetails);
-    }
-      
     // 상세페이지
     @GetMapping("/api/detail/{postid}")
     public DetailDto showDetail(@PathVariable Long postid,
                                 @AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.showDetail(postid,userDetails);
+    }
+
+    // 프로필 보기
+    @GetMapping("/api/posts/{userid}")
+    public ProfileDto showProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long userid){
+        return postService.showProfile(userDetails, userid);
+    }
+
+    // 프로필 수정
+    @PutMapping("/api/profile")
+    public void updatePost (@RequestParam("multipartFile") MultipartFile multipartFile,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.editprofile(multipartFile,userDetails);
     }
 }
