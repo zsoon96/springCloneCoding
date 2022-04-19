@@ -55,16 +55,24 @@ public class PostController {
         return postService.delPost(postId);
     }
 
-    // 프로필 보기
-    @GetMapping("/api/posts/mypost")
-    public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
-       return postService.showProfile(userDetails);
-    }
-      
     // 상세페이지
     @GetMapping("/api/detail/{postid}")
     public DetailDto showDetail(@PathVariable Long postid,
                                 @AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.showDetail(postid,userDetails);
+    }
+
+    // 프로필 보기
+    @GetMapping("/api/posts/{userid}")
+    public ProfileDto showProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long userid){
+        return postService.showProfile(userDetails, userid);
+    }
+
+    // 프로필 수정
+    @PutMapping("/api/profile")
+    public void updatePost (@RequestParam("multipartFile") MultipartFile multipartFile,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.editprofile(multipartFile,userDetails);
     }
 }
