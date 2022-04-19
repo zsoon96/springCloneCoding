@@ -1,12 +1,11 @@
 package com.sparta.springclonecoding.model;
 
-import com.sparta.springclonecoding.dto.PostRequestDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,6 +51,10 @@ public class Post extends Timestamped{
 
     public void update(String imageUrl, String content) {
         this.imageUrl = imageUrl;
+        this.content = content;
+    }
+
+    public void updateComment(String content) {
         this.content = content;
     }
 }

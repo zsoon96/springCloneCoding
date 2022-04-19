@@ -41,22 +41,4 @@ public class PostResponseDto {
         this.createdAt = post.getCreatedAt();
         this.favorites = post.getFavorites();
     }
-
-
-    public PostResponseDto(Post post, boolean myLike) {
-        this.postid = post.getId();
-        this.imageUrl = post.getImageUrl();
-        this.content = post.getContent();
-        this.comments = post.getComments();
-        this.favorites = post.getFavorites();
-        this.myLike = myLike;
-        this.createdAt = post.getCreatedAt();
-    }
-
-    public PostResponseDto(Post post) {
-        this.postid = post.getId();
-        this.imageUrl = post.getImageUrl();
-        this.content = post.getContent();
-        this.comments = post.getComments();
-    }
 }

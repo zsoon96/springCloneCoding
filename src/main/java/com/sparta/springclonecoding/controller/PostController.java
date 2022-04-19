@@ -3,18 +3,13 @@ package com.sparta.springclonecoding.controller;
 import com.sparta.springclonecoding.dto.DetailDto;
 import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
-import com.sparta.springclonecoding.dto.ResultDto;
-import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
-import com.sparta.springclonecoding.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,7 +22,9 @@ public class PostController {
     }
     // 게시글 작성
     @PostMapping("/api/posts")
-    public PostResponseDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+    public PostResponseDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+                                     @RequestParam("content") String content,
+                                     @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         if (multipartFile.isEmpty()){
             throw new IllegalArgumentException("사진을 첨부해 주세용!");
         }
@@ -36,13 +33,17 @@ public class PostController {
 
     // 게시글 조회
     @GetMapping("/api/posts")
-    public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getPost(userDetails);
+    public Page<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                          @RequestParam("page") int page) {
+        return postService.getPost(userDetails, page-1, 7,"creatAt");
     }
     
     // 게시글 수정
     @PutMapping("/api/posts/{postId}")
-    public PostResponseDto updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails ){
+    public PostResponseDto updatePost (@PathVariable Long postId,
+                                             @RequestParam("multipartFile") MultipartFile multipartFile,
+                                             @RequestParam("content") String content,
+                                             @AuthenticationPrincipal UserDetailsImpl userDetails ){
         return  postService.putPost(postId, multipartFile, content, userDetails.getUser().getId());
     }
     
