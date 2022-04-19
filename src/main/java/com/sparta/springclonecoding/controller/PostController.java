@@ -12,6 +12,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 public class PostController {
@@ -34,9 +36,8 @@ public class PostController {
 
     // 게시글 조회
     @GetMapping("/api/posts")
-    public Page<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                          @RequestParam("page") int page) {
-        return postService.getPost(userDetails, page-1, 7,"creatAt");
+    public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPost(userDetails, 0, 7,"creatAt").getContent();
     }
     
     // 게시글 수정

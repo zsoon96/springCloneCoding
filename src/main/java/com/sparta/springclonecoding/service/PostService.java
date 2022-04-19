@@ -31,6 +31,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final S3Service s3Service;
 
+    // 회원 프로필
     public ProfileDto showProfile(UserDetailsImpl userDetails){
         Long userid = userDetails.getUser().getId();
         User user = userRepository.findById(userid).orElseThrow(
