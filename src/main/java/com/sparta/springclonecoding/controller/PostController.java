@@ -56,9 +56,11 @@ public class PostController {
     }
 
     // 프로필 보기
-    @GetMapping("/api/posts/mypost")
-    public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
-       return postService.showProfile(userDetails);
+    @GetMapping("/api/posts/{userid}")
+    public ProfileDto showProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long userid){
+       return postService.showProfile(userDetails, userid);
     }
       
     // 상세페이지
