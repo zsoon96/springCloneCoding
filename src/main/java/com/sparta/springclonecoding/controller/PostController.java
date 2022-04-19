@@ -62,10 +62,9 @@ public class PostController {
     }
       
     // 상세페이지
-    @GetMapping("/api/detail/{postid}/{pageNum}")
+    @GetMapping("/api/detail/{postid}")
     public DetailDto showDetail(@PathVariable Long postid,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                @PathVariable int pageNum){
+                                @AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.showDetail(postid,userDetails);
     }
 }
