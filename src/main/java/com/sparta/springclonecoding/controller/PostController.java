@@ -25,7 +25,7 @@ public class PostController {
     }
     // 게시글 작성
     @PostMapping("/api/posts")
-    public Post savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+    public PostResponseDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         if (multipartFile.isEmpty()){
             throw new IllegalArgumentException("사진을 첨부해 주세용!");
         }
@@ -40,8 +40,8 @@ public class PostController {
     
     // 게시글 수정
     @PutMapping("/api/posts/{postId}")
-    public Post updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content ) throws IOException {
-        return  postService.putPost(postId, multipartFile, content);
+    public PostResponseDto updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails ){
+        return  postService.putPost(postId, multipartFile, content, userDetails.getUser().getId());
     }
     
     // 게시글 삭제
