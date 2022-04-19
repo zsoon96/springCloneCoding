@@ -1,6 +1,9 @@
 package com.sparta.springclonecoding.service;
 
-import com.sparta.springclonecoding.dto.*;
+import com.sparta.springclonecoding.dto.CommentResponseDto;
+import com.sparta.springclonecoding.dto.DetailDto;
+import com.sparta.springclonecoding.dto.PostResponseDto;
+import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
@@ -11,10 +14,7 @@ import com.sparta.springclonecoding.repository.UserRepository;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -40,6 +40,7 @@ public class PostService {
         return profileDto;
     }
 
+    // 상세 페이지 + 댓글 페이징 처리
     public DetailDto showDetail(Long postid,UserDetailsImpl userDetails){
         Post post =postRepository.findById(postid).orElseThrow(
                 ()-> new IllegalArgumentException("없는 포스트입니다"));
@@ -68,15 +69,12 @@ public class PostService {
     }
 
     // 게시글 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기
-    public Page<PostResponseDto> getPost (UserDetailsImpl userDetails,
-                                          int page,
-                                          int size,
-                                          String sortBy) {
+    public List<PostResponseDto> getPost (UserDetailsImpl userDetails,
+                                          int postMinId) {
 
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllByOrderByIdDesc();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         Long userId = userDetails.getUser().getId();
-
         if (userId == null) {
             throw new IllegalArgumentException("계정이 없습니다.");
         }
@@ -86,17 +84,10 @@ public class PostService {
             PostResponseDto postResponseDto = getPostResponseDto(userId, post);
             postResponseDtos.add(postResponseDto);
         }
-//        return postResponseDtos;
-
-        // 페이징 처리
-        Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
-
+//
         // list를 page으로 바꿔서 리턴
-        final int start = (int)pageable.getOffset();
-        final int end = Math.min((start + pageable.getPageSize()), postResponseDtos.size());
-        return new PageImpl<>(postResponseDtos.subList(start, end), pageable, postResponseDtos.size());
+        final int end = Math.min(postMinId+7 , postResponseDtos.size());
+        return postResponseDtos.subList(postMinId,end);
     }
 
     @NotNull
@@ -139,17 +130,11 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public PostResponseDto putPost(Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, String content, Long userId){
+    public PostResponseDto putPost(Long postId, String content, Long userId){
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 없습니다.")
         );
-        if (multipartFile.isEmpty()){
-            post.updateComment(content);
-            return getPostResponseDto(userId,post);
-        }
-
-        String imageUrl = s3Service.upload(multipartFile,"static");
-        post.update(imageUrl, content);
+        post.update(content);
 
         return getPostResponseDto(userId, post);
     }

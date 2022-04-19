@@ -54,7 +54,7 @@ public class Post extends Timestamped{
         this.content = content;
     }
 
-    public void updateComment(String content) {
+    public void update(String content) {
         this.content = content;
     }
 }
