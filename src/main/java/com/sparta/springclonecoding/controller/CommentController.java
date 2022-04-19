@@ -10,6 +10,8 @@ import com.sparta.springclonecoding.security.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @RestController
 public class CommentController {
@@ -21,8 +23,8 @@ public class CommentController {
     }
     // 댓글 작성
     @PostMapping("/api/comment")
-    public Post registComment(@RequestBody CommentRequestDto commentRequestDto,
-                              @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Optional<Post> registComment(@RequestBody CommentRequestDto commentRequestDto,
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails){
         Long userid = userDetails.getUser().getId();
         return commentservice.registComment(commentRequestDto,userid);
     }
