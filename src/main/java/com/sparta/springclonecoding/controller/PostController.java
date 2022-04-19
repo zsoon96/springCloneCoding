@@ -3,11 +3,9 @@ package com.sparta.springclonecoding.controller;
 import com.sparta.springclonecoding.dto.DetailDto;
 import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
-import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,18 +33,19 @@ public class PostController {
     }
 
     // 게시글 조회
-    @GetMapping("/api/posts")
-    public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getPost(userDetails, 0, 7,"creatAt").getContent();
+    @GetMapping("/api/posts/{postMinId}")
+    public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                          @PathVariable int postMinId) {
+        return postService.getPost(userDetails, postMinId);
+
     }
     
     // 게시글 수정
     @PutMapping("/api/posts/{postId}")
     public PostResponseDto updatePost (@PathVariable Long postId,
-                                             @RequestParam("multipartFile") MultipartFile multipartFile,
                                              @RequestParam("content") String content,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails ){
-        return  postService.putPost(postId, multipartFile, content, userDetails.getUser().getId());
+        return  postService.putPost(postId, content, userDetails.getUser().getId());
     }
     
     // 게시글 삭제
