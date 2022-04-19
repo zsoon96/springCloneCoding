@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -162,5 +164,15 @@ public class PostService {
     public Long delPost(Long postId) {
         postRepository.deleteById(postId);
         return postId;
+    }
+
+    // 프로필 수정
+    @Transactional
+    public void editprofile(MultipartFile multipartFile,UserDetailsImpl userDetails) {
+        String imageUrl = s3Service.upload(multipartFile,"static");
+        User user = userRepository.findById(userDetails.getId()).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저입니다.")
+        );
+        user.update(imageUrl);
     }
 }
