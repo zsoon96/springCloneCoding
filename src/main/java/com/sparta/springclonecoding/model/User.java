@@ -41,6 +41,11 @@ public class User {
         this.profile = profile;
     }
 
+    public User(String nickname, String profile) {
+        this.nickname = nickname;
+        this.profile = profile;
+    }
+
     public void update(String imageUrl) {
         this.profile = imageUrl;
     }

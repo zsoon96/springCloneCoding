@@ -39,9 +39,9 @@ public class PostService {
         int postCnt = postRepository.countAllByUserId(userid);
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
-        // 해당 프로필을 팔로우한 유저(팔로워)
+        // 해당 프로필을 팔로우한 유저(팔로워) 수
         Long userFollowerCnt = followRepository.countFollowerById(userid);
-        // 해당 프로필이 팔로우한 유저(팔로잉)
+        // 해당 프로필이 팔로우한 유저(팔로잉) 수
         Long userFollowingCnt = followRepository.countFolloingById(userid);
 
         return new ProfileDto(user, postCnt, loginUser, userFollowerCnt, userFollowingCnt);
@@ -60,7 +60,7 @@ public class PostService {
             }
         }
         // 코멘트 리스트 불러와서 페이징처리
-        List<Comment> commentList = commentRepository.findAllByIdOrderByIdDesc(postid);
+        List<Comment> commentList = commentRepository.findAllByPostidOrderByIdDesc(postid);
         final int end = Math.min(loadComment+10 , commentList.size());
         commentList.subList(loadComment,end);
 
