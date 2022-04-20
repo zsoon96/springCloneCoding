@@ -32,7 +32,7 @@ public class PostService {
         User user = userRepository.findById(userid).orElseThrow(
                 () -> new IllegalArgumentException("없는 유저입니다."));
         // 게시글 수
-        List<Post> postList = postRepository.findByUserId(userid);
+        List<Post> postList = postRepository.findByUserIdOrderByIdDesc(userid);
         int postCnt = postRepository.countAllByUserId(userid);
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
