@@ -62,4 +62,10 @@ public class PostController {
                                 @AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.showDetail(postid,userDetails);
     }
+
+    @PutMapping("/api/profile")
+    public void updatePost (@RequestParam("multipartFile") MultipartFile multipartFile,@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        postService.editprofile(multipartFile,userDetails);
+    }
+
 }

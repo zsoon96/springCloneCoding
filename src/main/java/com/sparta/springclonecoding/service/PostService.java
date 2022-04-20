@@ -109,6 +109,15 @@ public class PostService {
         return post;
     }
 
+    @Transactional
+    public void editprofile(MultipartFile multipartFile,UserDetailsImpl userDetails) throws IOException {
+        String imageUrl = s3Service.upload(multipartFile,"static");
+        User user = userRepository.findById(userDetails.getId()).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저입니다.")
+        );
+        user.update(imageUrl);
+    }
+
 
     // 게시글 삭제
     public Long delPost(Long postId) {

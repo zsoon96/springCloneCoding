@@ -32,6 +32,10 @@ public class User {
     @JoinColumn
     private List<Favorite> favorites = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn
+    private List<ChatContent> chatContents = new ArrayList<>();
+
     private String nickname;
 
     public User(String username, String nickname, String password,String profile) {
@@ -39,5 +43,8 @@ public class User {
         this.nickname = nickname;
         this.password = password;
         this.profile = profile;
+    }
+    public void update(String imageUrl){
+        this.profile =imageUrl;
     }
 }
