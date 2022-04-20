@@ -44,7 +44,7 @@ public class UserController {
     // 회원 로그인 여부 확인
     @GetMapping("/api/islogin")
     public UserResponseDto isLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return new UserResponseDto(userDetails.getUser().getUsername(), userDetails.getUser().getNickname(), userDetails.getUser().getProfile());
+        return new UserResponseDto(userDetails.getUser());
     }
 
     // 회원 중복 확인
