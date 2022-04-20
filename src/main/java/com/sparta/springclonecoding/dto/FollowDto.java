@@ -1,6 +1,5 @@
 package com.sparta.springclonecoding.dto;
 
-import com.sparta.springclonecoding.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,14 +9,12 @@ public class FollowDto {
     private String nickname;
     private String profile;
     private boolean followState;
-    private boolean loginUser;
+    private boolean isLoginUser;
 
-    public FollowDto(User user, boolean followState, boolean loginUser) {
-        this.nickname = user.getNickname();
-        this.profile = user.getProfile();
+    public FollowDto(UserResponseDto followUserDto, boolean followState, boolean isLoginUser) {
+        this.nickname = followUserDto.getNickname();
+        this.profile = followUserDto.getProfile();
         this.followState = followState;
-        this.loginUser = loginUser;
-
+        this.isLoginUser = isLoginUser;
     }
-
 }
