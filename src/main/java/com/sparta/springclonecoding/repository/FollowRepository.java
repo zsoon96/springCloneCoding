@@ -1,10 +1,12 @@
 package com.sparta.springclonecoding.repository;
 
+import com.sparta.springclonecoding.model.Favorite;
 import com.sparta.springclonecoding.model.Follow;
 import com.sparta.springclonecoding.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
     Follow findByFromUserAndToUser(User fromUser, User toUser);
@@ -17,5 +19,5 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     void deleteByFromUserAndToUser(User fromUser, User toUser);
 
-    Long countByFromUserAndToUser(Long userid, boolean loginUser);
+    Long countByFromUserAndToUser(Long userid, User toUser);
 }

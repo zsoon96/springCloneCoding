@@ -1,10 +1,7 @@
 package com.sparta.springclonecoding.service;
 
 import com.sparta.springclonecoding.dto.*;
-import com.sparta.springclonecoding.model.Comment;
-import com.sparta.springclonecoding.model.Favorite;
-import com.sparta.springclonecoding.model.Post;
-import com.sparta.springclonecoding.model.User;
+import com.sparta.springclonecoding.model.*;
 import com.sparta.springclonecoding.repository.*;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +13,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -36,6 +34,8 @@ public class PostService {
         int postCnt = postRepository.countAllByUserId(userid);
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
+        // 팔로우 여부
+        Optional<Follow> followState = followRepository.findByFromUserAndToUser(userid, ) != 0;
         // 해당 프로필을 팔로우한 유저(팔로워) 수
         Long userFollowerCnt = followRepository.countAllByToUser(user);
         // 해당 프로필이 팔로우한 유저(팔로잉) 수
