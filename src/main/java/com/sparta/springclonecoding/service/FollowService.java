@@ -62,7 +62,7 @@ public class FollowService {
 
             User user = new User(nickname, profile);
 
-            boolean followState = followRepository.countByFollowerIdAndFollowingId(userid, loginUser) != 0;
+            boolean followState = followRepository.countByFromUserAndToUser(userid, loginUser) != 0;
             FollowDto followDto = new FollowDto(user, followState, loginUser);
             followerDtoList.add(followDto);
 
@@ -84,7 +84,7 @@ public class FollowService {
 
             User user = new User(nickname, profile);
 
-            boolean followState = followRepository.countByFollowerIdAndFollowingId(userid, loginUser) != 0;
+            boolean followState = followRepository.countByFromUserAndToUser(userid, loginUser) != 0;
             FollowDto followDto = new FollowDto(user, followState, loginUser);
             followingDtoList.add(followDto);
 
