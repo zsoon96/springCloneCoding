@@ -55,10 +55,11 @@ public class PostController {
     }
 
     // 상세페이지
-    @GetMapping("/api/detail/{postid}")
+    @GetMapping("/api/detail/{postid}/{loadComment}")
     public DetailDto showDetail(@PathVariable Long postid,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return postService.showDetail(postid,userDetails);
+                                @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                @PathVariable int loadComment){
+        return postService.showDetail(postid,userDetails,loadComment);
     }
 
     // 프로필 보기
