@@ -123,9 +123,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Static 정보 접근 허용
         skipPathList.add("GET,/images/**");
-        skipPathList.add("GET,/css/**");
-//        skipPathList.add("GET,**");
-//        skipPathList.add("POST,**");
+//        skipPathList.add("MESSAGE,**");
+        skipPathList.add("PUT,**");
 //
 //        skipPathList.add("POST,/api/**");
         // h2-console 허용

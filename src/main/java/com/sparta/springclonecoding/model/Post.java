@@ -31,10 +31,10 @@ public class Post extends Timestamped{
     @JoinColumn
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn
-    private List<Favorite> favorites = new ArrayList<>();
-  
+//    @OneToMany
+//    @JoinColumn
+//    private List<Favorite> favorites = new ArrayList<>();
+//
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
