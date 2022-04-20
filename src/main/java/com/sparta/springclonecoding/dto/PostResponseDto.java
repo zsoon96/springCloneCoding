@@ -1,15 +1,12 @@
 package com.sparta.springclonecoding.dto;
 
 
-
-import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.model.Favorite;
 import com.sparta.springclonecoding.model.Post;
-import com.sparta.springclonecoding.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.List;
 
 

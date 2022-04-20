@@ -1,6 +1,7 @@
 package com.sparta.springclonecoding.service;
 
 import com.sparta.springclonecoding.dto.FollowDto;
+import com.sparta.springclonecoding.dto.UserResponseDto;
 import com.sparta.springclonecoding.model.Follow;
 import com.sparta.springclonecoding.model.User;
 import com.sparta.springclonecoding.repository.FollowRepository;
@@ -44,44 +45,51 @@ public class FollowService {
 
     }
 
-    // 나를 따르는 사람들(팔로워)
+    // 해당 프로필을 따르는 사람들(팔로워) -> 프로필유저, 로그인된유저, 다른 사람들
     public List<FollowDto> getfollower(Long userid, UserDetailsImpl userDetails) {
-        // 로그인 된 유저와 프로필 유저 일치 여부
-        boolean loginUser = userid.equals(userDetails.getUser().getId());
+        // 프로필 유저에 대한 유저정보
+        User user = userRepository.findById(userid).orElseThrow(
+                () -> new IllegalArgumentException("없는 유저입니다."));
 
-        List<Follow> followerList = followRepository.findAllByFromUser(userid);
+        // 로그인 된 유저와 프로필 유저 일치 여부
+        boolean isloginUser = userid.equals(userDetails.getUser().getId());
+
+        List<Follow> followerList = followRepository.findAllByFromUser(user);
         List<FollowDto> followerDtoList = new ArrayList<>();
 
         for (Follow follower : followerList) {
-            String nickname = follower.getFromUser().getNickname();
-            String profile = follower.getFromUser().getProfile();
+            User followUser = follower.getFromUser();
+            // 팔로워들의 정보
+            UserResponseDto followUserDto = new UserResponseDto(followUser);
+            // 로그인된 유저가 해당 팔로워들을 팔로우 하는지 여부
+            boolean followState = followRepository.existsByFromUserAndToUser(userDetails.getUser(), followUser);
 
-            User user = new User(nickname, profile);
-
-            boolean followState = followRepository.countByFromUserAndToUser(userid, loginUser) != 0;
-            FollowDto followDto = new FollowDto(user, followState, loginUser);
+            FollowDto followDto = new FollowDto(followUserDto, followState, isloginUser);
             followerDtoList.add(followDto);
 
         }
         return followerDtoList;
     }
 
-    // 내가 따르는 사람들(팔로워)
+    // 해당 프로필이 따르는 사람들(팔로워)
     public List<FollowDto> getfollowing(Long userid, UserDetailsImpl userDetails) {
         // 로그인 된 유저와 프로필 유저 일치 여부
-        boolean loginUser = userid.equals(userDetails.getUser().getId());
+        boolean isloginUser = userid.equals(userDetails.getUser().getId());
+        // 프로필 유저에 대한 유저정보
+        User user = userRepository.findById(userid).orElseThrow(
+                () -> new IllegalArgumentException("없는 유저입니다."));
 
-        List<Follow> followingList = followRepository.findAllByToUser(userid);
+        List<Follow> followingList = followRepository.findAllByToUser(user);
         List<FollowDto> followingDtoList = new ArrayList<>();
 
         for (Follow following : followingList) {
-            String nickname = following.getFromUser().getNickname();
-            String profile = following.getFromUser().getProfile();
+            User followUser = following.getToUser();
+            // 팔로워들의 정보
+            UserResponseDto followUserDto = new UserResponseDto(followUser);
+            // 로그인된 유저가 해당 팔로잉들을 팔로우 하는지 여부
+            boolean followState = followRepository.existsByFromUserAndToUser(userDetails.getUser(), followUser);
 
-            User user = new User(nickname, profile);
-
-            boolean followState = followRepository.countByFromUserAndToUser(userid, loginUser) != 0;
-            FollowDto followDto = new FollowDto(user, followState, loginUser);
+            FollowDto followDto = new FollowDto(followUserDto, followState, isloginUser);
             followingDtoList.add(followDto);
 
         }

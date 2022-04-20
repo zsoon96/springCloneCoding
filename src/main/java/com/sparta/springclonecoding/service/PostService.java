@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,19 +30,20 @@ public class PostService {
     public ProfileDto showProfile(UserDetailsImpl userDetails, Long userid){
         User user = userRepository.findById(userid).orElseThrow(
                 () -> new IllegalArgumentException("없는 유저입니다."));
-        // 게시글 수
+        // 게시글 목록
         List<Post> postList = postRepository.findByUserIdOrderByIdDesc(userid);
+        // 게시글 수
         int postCnt = postRepository.countAllByUserId(userid);
         // 로그인 된 유저와 프로필 유저 일치 여부
-        boolean loginUser = userid.equals(userDetails.getUser().getId());
+        boolean isLoginUser = userid.equals(userDetails.getUser().getId());
         // 팔로우 여부
-//        Optional<Follow> followState = followRepository.findByFromUserAndToUser(userid, loginUser) != 0;
+        boolean followState = followRepository.existsByFromUserAndToUser(userDetails.getUser(), user);
         // 해당 프로필을 팔로우한 유저(팔로워) 수
         Long userFollowerCnt = followRepository.countAllByToUser(user);
         // 해당 프로필이 팔로우한 유저(팔로잉) 수
         Long userFollowingCnt = followRepository.countAllByFromUser(user);
 
-        return new ProfileDto(user, postList, postCnt, loginUser, userFollowerCnt, userFollowingCnt);
+        return new ProfileDto(user, postList, postCnt, isLoginUser, followState, userFollowerCnt, userFollowingCnt);
     }
 
     // 상세 페이지 + 댓글 페이징 처리
