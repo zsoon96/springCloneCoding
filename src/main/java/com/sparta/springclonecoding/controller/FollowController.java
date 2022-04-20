@@ -23,8 +23,9 @@ public class FollowController {
 
     // 언팔로우
     @DeleteMapping("/follow/{userid}")
-    public Long unfollowUser(@PathVariable Long userid, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return followService.unfollow(userid, userDetails);
+    public String unfollowUser(@PathVariable Long userid, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        followService.unfollow(userid, userDetails);
+        return "삭제완료";
     }
 
     // 팔로워 조회

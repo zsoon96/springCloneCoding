@@ -10,6 +10,7 @@ import com.sparta.springclonecoding.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 
@@ -31,6 +32,7 @@ public class FavoriteService {
     }
 
 
+    @Transactional
     public void unpressLike(Long postid,Long userid){
         Favorite favorite = favoriteRepository.findByUseridAndPostid(userid,postid).orElseThrow(
                 ()-> new IllegalArgumentException("이미 좋아요가 취소되었습니다")

@@ -35,12 +35,11 @@ public class PostService {
         List<Post> postList = postRepository.findByUserId(userid);
         int postCnt = postRepository.countAllByUserId(userid);
         // 로그인 된 유저와 프로필 유저 일치 여부
-        System.out.println(userDetails.getUser());
         boolean loginUser = userid.equals(userDetails.getUser().getId());
         // 해당 프로필을 팔로우한 유저(팔로워) 수
-        Long userFollowerCnt = followRepository.countFollowerById(userid);
+        Long userFollowerCnt = followRepository.countAllByToUser(user);
         // 해당 프로필이 팔로우한 유저(팔로잉) 수
-        Long userFollowingCnt = followRepository.countFollowingById(userid);
+        Long userFollowingCnt = followRepository.countAllByFromUser(user);
 
         return new ProfileDto(user, postList, postCnt, loginUser, userFollowerCnt, userFollowingCnt);
     }
