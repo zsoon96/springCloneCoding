@@ -71,14 +71,14 @@ public class FollowService {
     }
 
     // 내가 따르는 사람들(팔로워)
-    public List<FollowDto> getfolloing(Long userid, UserDetailsImpl userDetails) {
+    public List<FollowDto> getfollowing(Long userid, UserDetailsImpl userDetails) {
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
 
-        List<Follow> folloingList = userRepository.findFolloingById(userid);
+        List<Follow> followingList = userRepository.findFolloingById(userid);
         List<FollowDto> followingDtoList = new ArrayList<>();
 
-        for (Follow following : folloingList) {
+        for (Follow following : followingList) {
             String nickname = following.getFromUser().getNickname();
             String profile = following.getFromUser().getProfile();
 

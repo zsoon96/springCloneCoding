@@ -27,8 +27,15 @@ public class FollowController {
         return followService.unfollow(userid, userDetails);
     }
 
-    @GetMapping("/follow/{userid}/follower")
+    // 팔로워 조회
+   @GetMapping("/follow/{userid}/follower")
     public List<FollowDto> getFollower(@PathVariable Long userid, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return followService.getfollower(userid, userDetails);
+    }
+
+    // 팔로잉 조회
+    @GetMapping("/follow/{userid}/following")
+    public List<FollowDto> getFollowing(@PathVariable Long userid, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return followService.getfollowing(userid, userDetails);
     }
 }
