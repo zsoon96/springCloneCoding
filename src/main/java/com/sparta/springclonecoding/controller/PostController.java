@@ -35,8 +35,8 @@ public class PostController {
     // 게시글 조회
     @GetMapping("/api/posts/{postMinId}")
     public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                          @PathVariable int postMinId) {
-        return postService.getPost(userDetails, postMinId);
+                                          @PathVariable int loadPost) {
+        return postService.getPost(userDetails, loadPost);
 
     }
     
@@ -55,10 +55,11 @@ public class PostController {
     }
 
     // 상세페이지
-    @GetMapping("/api/detail/{postid}")
+    @GetMapping("/api/detail/{postid}/{loadComment}")
     public DetailDto showDetail(@PathVariable Long postid,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return postService.showDetail(postid,userDetails);
+                                @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                @PathVariable int loadComment){
+        return postService.showDetail(postid,userDetails,loadComment);
     }
 
     // 프로필 보기
