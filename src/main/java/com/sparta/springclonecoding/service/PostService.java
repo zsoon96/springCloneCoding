@@ -7,6 +7,7 @@ import com.sparta.springclonecoding.dto.ProfileDto;
 import com.sparta.springclonecoding.model.Comment;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
+import com.sparta.springclonecoding.repository.CommentRepository;
 import com.sparta.springclonecoding.repository.FollowRepository;
 import com.sparta.springclonecoding.repository.PostRepository;
 import com.sparta.springclonecoding.repository.UserRepository;
@@ -28,6 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final S3Service s3Service;
     private final FollowRepository followRepository;
+    private final CommentRepository commentRepository;
 
     // 회원 프로필
     public ProfileDto showProfile(UserDetailsImpl userDetails, Long userid){
@@ -46,7 +48,7 @@ public class PostService {
     }
 
     // 상세 페이지 + 댓글 페이징 처리
-    public DetailDto showDetail(Long postid,UserDetailsImpl userDetails){
+    public DetailDto showDetail(Long postid, UserDetailsImpl userDetails, int loadComment){
         Post post =postRepository.findById(postid).orElseThrow(
                 ()-> new IllegalArgumentException("없는 포스트입니다"));
         Boolean myLike = false;
@@ -57,6 +59,11 @@ public class PostService {
                 break;
             }
         }
+        // 코멘트 리스트 불러와서 페이징처리
+        List<Comment> commentList = commentRepository.findAllByIdOrderByIdDesc(postid);
+        final int end = Math.min(loadComment+10 , commentList.size());
+        commentList.subList(loadComment,end);
+
         return new DetailDto(post,post.getFavorites().size(),myLike);
     }
 
@@ -75,7 +82,7 @@ public class PostService {
 
     // 게시글 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기
     public List<PostResponseDto> getPost (UserDetailsImpl userDetails,
-                                          int postMinId) {
+                                          int loadPost) {
 
         List<Post> posts = postRepository.findAllByOrderByIdDesc();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
@@ -89,10 +96,10 @@ public class PostService {
             PostResponseDto postResponseDto = getPostResponseDto(userId, post);
             postResponseDtos.add(postResponseDto);
         }
-//
+
         // list를 page으로 바꿔서 리턴
-        final int end = Math.min(postMinId+7 , postResponseDtos.size());
-        return postResponseDtos.subList(postMinId,end);
+        final int end = Math.min(loadPost+3 , postResponseDtos.size());
+        return postResponseDtos.subList(loadPost,end);
     }
 
     @NotNull
