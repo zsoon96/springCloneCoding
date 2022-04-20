@@ -33,10 +33,10 @@ public class PostController {
     }
 
     // 게시글 조회
-    @GetMapping("/api/posts/{postMinId}")
+    @GetMapping("/api/posts/{loadPost}")
     public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                          @PathVariable int postMinId) {
-        return postService.getPost(userDetails, postMinId);
+                                          @PathVariable int loadPost) {
+        return postService.getPost(userDetails, loadPost);
 
     }
     

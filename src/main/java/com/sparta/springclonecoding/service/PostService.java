@@ -75,7 +75,7 @@ public class PostService {
 
     // 게시글 목록 조회 - 게시글 리스트를 반복문으로 꺼내서 각 게시글의 각 코멘트 갯수 보여주고 다시 담아주기
     public List<PostResponseDto> getPost (UserDetailsImpl userDetails,
-                                          int postMinId) {
+                                          int loadPost) {
 
         List<Post> posts = postRepository.findAllByOrderByIdDesc();
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
@@ -91,8 +91,8 @@ public class PostService {
         }
 //
         // list를 page으로 바꿔서 리턴
-        final int end = Math.min(postMinId+7 , postResponseDtos.size());
-        return postResponseDtos.subList(postMinId,end);
+        final int end = Math.min(loadPost+7 , postResponseDtos.size());
+        return postResponseDtos.subList(loadPost,end);
     }
 
     @NotNull
