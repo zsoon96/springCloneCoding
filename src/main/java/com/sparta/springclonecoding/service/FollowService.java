@@ -29,23 +29,19 @@ public class FollowService {
         // 팔로우 할 유저 정보
         User toUser = userRepository.findById(userid).get();
 
-        return new Follow(fromUser, toUser);
+        return followRepository.save(new Follow(fromUser, toUser));
     }
 
     // 언팔로우
     @Transactional
-    public Long unfollow(Long userid, UserDetailsImpl userDetails) {
+    public void unfollow(Long userid, UserDetailsImpl userDetails) {
         // 현재 로그인된 유저 정보
         User fromUser = userDetails.getUser();
         // 언팔로우 할 유저 정보
         User toUser = userRepository.findById(userid).get();
 
-        Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser);
+        followRepository.deleteByFromUserAndToUser(fromUser,toUser);
 
-        if (follow != null) {
-            return follow.getId();
-        }
-        return -1L;
     }
 
     // 나를 따르는 사람들(팔로워)
