@@ -22,12 +22,12 @@ public class ProfileDto {
     private Long userFollowingCnt; // 해당 유저가 팔로우 하는 사람들의 수
 
 
-    public ProfileDto(User user, int postCnt, boolean loginUser, Long userFollowerCnt, Long userFollowingCnt){
+    public ProfileDto(User user, List<Post> post, int postCnt, boolean loginUser, Long userFollowerCnt, Long userFollowingCnt){
         this.username = user.getUsername();
         this.nickname = user.getNickname();
         this.progfileImg= user.getProfile();
         this.postCnt = postCnt;
-        this.post = user.getPosts();
+        this.post = post;
         this.loginUser = loginUser;
         this.userFollowerCnt = userFollowerCnt;
         this.userFollowingCnt = userFollowingCnt;

@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class PostController {
     @PostMapping("/api/posts")
     public PostResponseDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile,
                                      @RequestParam("content") String content,
-                                     @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+                                     @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         if (multipartFile.isEmpty()){
             throw new IllegalArgumentException("사진을 첨부해 주세용!");
         }
@@ -44,7 +45,7 @@ public class PostController {
     @PutMapping("/api/posts/{postId}")
     public PostResponseDto updatePost (@PathVariable Long postId,
                                              @RequestParam("content") String content,
-                                             @AuthenticationPrincipal UserDetailsImpl userDetails ){
+                                             @AuthenticationPrincipal UserDetailsImpl userDetails ) throws IOException{
         return  postService.putPost(postId, content, userDetails.getUser().getId());
     }
     
@@ -63,7 +64,7 @@ public class PostController {
     }
 
     // 프로필 보기
-    @GetMapping("/api/posts/{userid}")
+    @GetMapping("/api/profile/{userid}")
     public ProfileDto showProfile(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long userid){
@@ -72,7 +73,7 @@ public class PostController {
 
     // 프로필 수정
     @PutMapping("/api/profile")
-    public void updatePost (@RequestParam("multipartFile") MultipartFile multipartFile,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public void updatePost (@RequestParam("multipartFile") MultipartFile multipartFile,@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         postService.editprofile(multipartFile,userDetails);
     }
 }

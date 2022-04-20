@@ -36,6 +36,7 @@ public class PostService {
         User user = userRepository.findById(userid).orElseThrow(
                 () -> new IllegalArgumentException("없는 유저입니다."));
         // 게시글 수
+        List<Post> postList = postRepository.findByUserId(userid);
         int postCnt = postRepository.countAllByUserId(userid);
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
@@ -44,7 +45,7 @@ public class PostService {
         // 해당 프로필이 팔로우한 유저(팔로잉) 수
         Long userFollowingCnt = followRepository.countFollowingById(userid);
 
-        return new ProfileDto(user, postCnt, loginUser, userFollowerCnt, userFollowingCnt);
+        return new ProfileDto(user, postList, postCnt, loginUser, userFollowerCnt, userFollowingCnt);
     }
 
     // 상세 페이지 + 댓글 페이징 처리
@@ -99,7 +100,7 @@ public class PostService {
 
         // list를 page으로 바꿔서 리턴
         final int end = Math.min(loadPost+3 , postResponseDtos.size());
-        return postResponseDtos.subList(loadPost,end);
+        return postResponseDtos.subList(0,end);
     }
 
     @NotNull
@@ -142,7 +143,7 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public PostResponseDto putPost(Long postId, String content, Long userId){
+    public PostResponseDto putPost(Long postId, String content, Long userId) throws IOException{
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 없습니다.")
         );
@@ -160,7 +161,7 @@ public class PostService {
 
     // 프로필 수정
     @Transactional
-    public void editprofile(MultipartFile multipartFile,UserDetailsImpl userDetails) {
+    public void editprofile(MultipartFile multipartFile,UserDetailsImpl userDetails) throws IOException{
         String imageUrl = s3Service.upload(multipartFile,"static");
         User user = userRepository.findById(userDetails.getId()).orElseThrow(
                 ()-> new IllegalArgumentException("없는 유저입니다.")
