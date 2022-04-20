@@ -63,7 +63,7 @@ public class PostController {
     }
 
     // 프로필 보기
-    @GetMapping("/api/posts/{userid}")
+    @GetMapping("/api/profile/{userid}")
     public ProfileDto showProfile(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long userid){
