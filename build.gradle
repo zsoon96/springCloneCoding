@@ -41,7 +41,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.6'
     implementation 'commons-codec:commons-codec:1.5'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'com.auth0:java-jwt:3.13.0'
     // S3
@@ -54,6 +53,7 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3'
     implementation 'org.webjars:bootstrap:3.3.7'
     implementation 'org.webjars:jquery:3.1.1-1'
+
 }
 
 tasks.named('test') {

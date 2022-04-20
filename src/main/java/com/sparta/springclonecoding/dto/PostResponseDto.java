@@ -25,10 +25,10 @@ public class PostResponseDto {
 
     private int commentCnt; // 댓글 갯수
     private LocalDateTime createdAt;
-    private List<Comment> comments;
+    private List<CommentResponseDto> comments;
     private List<Favorite> favorites;
 
-    public PostResponseDto(Post post, int commentCnt, int favoriteCnt, boolean myLike, User user) {
+    public PostResponseDto(Post post, List<CommentResponseDto> comments, int commentCnt, int favoriteCnt, boolean myLike, User user) {
         this.user = user;
         this.postid = post.getId();
         this.imageUrl = post.getImageUrl();
@@ -37,10 +37,8 @@ public class PostResponseDto {
         this.myLike = myLike;
         this.commentCnt = commentCnt;
         this.createdAt = post.getCreatedAt();
-        this.comments = post.getComments();
+        this.comments = comments;
         this.createdAt = post.getCreatedAt();
         this.favorites = post.getFavorites();
     }
-
-
 }

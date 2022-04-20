@@ -12,15 +12,24 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class ProfileDto {
-    String nickname;
-    String progfileImg;
-    int postCnt;
-    List<Post> post;
+    private String username; // 유저 정보(username, nickname)
+    private String nickname;
+    private String progfileImg; // 프로필 이미지
+    private int postCnt; // 게시글 수
+    private List<Post> post; // 게시글 목록
+    private boolean loginUser; // 이 페이지가 로그인한 유저의 프로필인지
+    private Long userFollowerCnt; // 해당 유저를 팔로우 하는 사람들의 수
+    private Long userFollowingCnt; // 해당 유저가 팔로우 하는 사람들의 수
 
-    public ProfileDto(User user, int postCnt){
-        this.nickname = user.getUsername();
+
+    public ProfileDto(User user, List<Post> post, int postCnt, boolean loginUser, Long userFollowerCnt, Long userFollowingCnt){
+        this.username = user.getUsername();
+        this.nickname = user.getNickname();
         this.progfileImg= user.getProfile();
         this.postCnt = postCnt;
-        this.post = user.getPosts();
+        this.post = post;
+        this.loginUser = loginUser;
+        this.userFollowerCnt = userFollowerCnt;
+        this.userFollowingCnt = userFollowingCnt;
     }
 }

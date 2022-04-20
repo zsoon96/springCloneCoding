@@ -3,7 +3,6 @@ package com.sparta.springclonecoding.controller;
 import com.sparta.springclonecoding.dto.DetailDto;
 import com.sparta.springclonecoding.dto.PostResponseDto;
 import com.sparta.springclonecoding.dto.ProfileDto;
-import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import com.sparta.springclonecoding.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,9 @@ public class PostController {
     }
     // 게시글 작성
     @PostMapping("/api/posts")
-    public Post savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam("content") String content, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+    public PostResponseDto savePost (@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+                                     @RequestParam("content") String content,
+                                     @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         if (multipartFile.isEmpty()){
             throw new IllegalArgumentException("사진을 첨부해 주세용!");
         }
@@ -33,15 +34,19 @@ public class PostController {
     }
 
     // 게시글 조회
-    @GetMapping("/api/posts")
-    public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getPost(userDetails);
+    @GetMapping("/api/posts/{loadPost}")
+    public List<PostResponseDto> showPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                          @PathVariable int loadPost) {
+        return postService.getPost(userDetails, loadPost);
+
     }
     
     // 게시글 수정
     @PutMapping("/api/posts/{postId}")
-    public Post updatePost (@PathVariable Long postId, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("content") String content ) throws IOException {
-        return  postService.putPost(postId, multipartFile, content);
+    public PostResponseDto updatePost (@PathVariable Long postId,
+                                             @RequestParam("content") String content,
+                                             @AuthenticationPrincipal UserDetailsImpl userDetails ) throws IOException{
+        return  postService.putPost(postId, content, userDetails.getUser().getId());
     }
     
     // 게시글 삭제
@@ -50,17 +55,26 @@ public class PostController {
         return postService.delPost(postId);
     }
 
-    // 프로필 보기
-    @GetMapping("/api/posts/mypost")
-    public ProfileDto showProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
-       return postService.showProfile(userDetails);
-    }
-      
     // 상세페이지
-    @GetMapping("/api/detail/{postid}")
+    @GetMapping("/api/detail/{postid}/{loadComment}")
     public DetailDto showDetail(@PathVariable Long postid,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return postService.showDetail(postid,userDetails);
+                                @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                @PathVariable int loadComment){
+        return postService.showDetail(postid,userDetails,loadComment);
+    }
+
+    // 프로필 보기
+    @GetMapping("/api/profile/{userid}")
+    public ProfileDto showProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long userid){
+        return postService.showProfile(userDetails, userid);
+    }
+
+    // 프로필 수정
+    @PutMapping("/api/profile")
+    public void updatePost (@RequestParam("multipartFile") MultipartFile multipartFile,@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        postService.editprofile(multipartFile,userDetails);
     }
 
     @PutMapping("/api/profile")

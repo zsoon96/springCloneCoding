@@ -1,6 +1,7 @@
 package com.sparta.springclonecoding.controller;
 
-import com.sparta.springclonecoding.dto.IsDto;
+import com.sparta.springclonecoding.dto.UserRequestDto;
+import com.sparta.springclonecoding.dto.UserResponseDto;
 import com.sparta.springclonecoding.dto.ResultDto;
 import com.sparta.springclonecoding.dto.SignupRequestDto;
 import com.sparta.springclonecoding.repository.UserRepository;
@@ -42,14 +43,14 @@ public class UserController {
 
     // 회원 로그인 여부 확인
     @GetMapping("/api/islogin")
-    public IsDto isLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return new IsDto(userDetails.getUser().getUsername(), userDetails.getUser().getNickname());
+    public UserResponseDto isLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return new UserResponseDto(userDetails.getUser());
     }
 
     // 회원 중복 확인
     @PostMapping("/api/idcheck")
-    public ResultDto idCheck(@RequestBody IsDto isDto) {
-        if (userRepository.findByUsername(isDto.getUsername()).isPresent()) {
+    public ResultDto idCheck(@RequestBody UserRequestDto userDto) {
+        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             return new ResultDto(false, "이미 존재하는 아이디 입니다.");
         }
         return new ResultDto(true, "사용할 수 있는 아이디 입니다.");
