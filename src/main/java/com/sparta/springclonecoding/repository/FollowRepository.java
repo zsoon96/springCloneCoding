@@ -4,11 +4,16 @@ import com.sparta.springclonecoding.model.Follow;
 import com.sparta.springclonecoding.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface FollowRepository extends JpaRepository<Follow, Long> {
     Follow findByFromUserAndToUser(User fromUser, User toUser);
 
-    Long countFollowerById(Long userid);
-    Long countFolloingById(Long userid);
+    List<Follow> findAllByFromUser(Long userid);
+    List<Follow> findAllByToUser(Long userid);
 
-    int countByFollowerIdAndFollowingId(Long userid, boolean loginUser);
+    Long countFollowerById(Long userid);
+    Long countFollowingById(Long userid);
+
+    Long countByFollowerIdAndFollowingId(Long userid, boolean loginUser);
 }
