@@ -22,6 +22,7 @@ public class PostResponseDto {
     private int favoriteCnt; // 좋아요 수
     private boolean myLike; // 해당 게시글에 대한 사용자의 좋아요 여부
     private UserResponseDto userResponseDto;
+    private String timeBefore;
 
     private int commentCnt; // 댓글 갯수
     private LocalDateTime createdAt;
@@ -29,7 +30,7 @@ public class PostResponseDto {
     private List<Favorite> favorites;
 
     public PostResponseDto(Post post, List<Favorite> favorites,List<CommentResponseDto> comments, int commentCnt, int favoriteCnt,
-                           boolean myLike, UserResponseDto userResponseDto) {
+                           boolean myLike, UserResponseDto userResponseDto,String timeBefore) {
         this.userResponseDto = userResponseDto;
         this.postid = post.getId();
         this.imageUrl = post.getImageUrl();
@@ -41,5 +42,6 @@ public class PostResponseDto {
         this.comments = comments;
         this.createdAt = post.getCreatedAt();
         this.favorites = favorites;
+        this.timeBefore = timeBefore;
     }
 }

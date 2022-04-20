@@ -19,5 +19,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     void deleteByFromUserAndToUser(User fromUser, User toUser);
 
-    Long countByFromUserAndToUser(Long userid, User toUser);
+    Long countByFromUserAndToUser(Long userid, boolean loginUser);
+//    Optional<Follow> countByFromUserAndToUser(User fromUser, User toUser);
 }

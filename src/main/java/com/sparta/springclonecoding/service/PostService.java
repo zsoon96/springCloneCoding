@@ -4,6 +4,7 @@ import com.sparta.springclonecoding.dto.*;
 import com.sparta.springclonecoding.model.*;
 import com.sparta.springclonecoding.repository.*;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
+import com.sparta.springclonecoding.util.ConvertTime;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class PostService {
     private final FollowRepository followRepository;
     private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
+    private final ConvertTime convertTime;
 
     // 회원 프로필
     public ProfileDto showProfile(UserDetailsImpl userDetails, Long userid){
@@ -35,7 +37,7 @@ public class PostService {
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
         // 팔로우 여부
-        Optional<Follow> followState = followRepository.findByFromUserAndToUser(userid, ) != 0;
+//        Optional<Follow> followState = followRepository.findByFromUserAndToUser(userid, loginUser) != 0;
         // 해당 프로필을 팔로우한 유저(팔로워) 수
         Long userFollowerCnt = followRepository.countAllByToUser(user);
         // 해당 프로필이 팔로우한 유저(팔로잉) 수
@@ -124,8 +126,10 @@ public class PostService {
             commentList.add(commentResponseDto);
         }
         List<Favorite> favorites = favoriteRepository.findAllByPostid(post.getId());
+        String timeBefore = convertTime.convertLocaldatetimeToTime(post.getCreatedAt());
 
-        PostResponseDto postResponseDto = new PostResponseDto(post, favorites, commentList, commentCnt,favoriteCnt,myLike,new UserResponseDto(user));
+        PostResponseDto postResponseDto = new PostResponseDto(post, favorites,
+                commentList, commentCnt,favoriteCnt,myLike,new UserResponseDto(user),timeBefore);
         return postResponseDto;
     }
 
