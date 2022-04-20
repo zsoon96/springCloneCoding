@@ -53,7 +53,7 @@ public class FollowService {
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
 
-        List<Follow> followerList = userRepository.findFollowerById(userid);
+        List<Follow> followerList = followRepository.findAllByFromUser(userid);
         List<FollowDto> followerDtoList = new ArrayList<>();
 
         for (Follow follower : followerList) {
@@ -75,7 +75,7 @@ public class FollowService {
         // 로그인 된 유저와 프로필 유저 일치 여부
         boolean loginUser = userid.equals(userDetails.getUser().getId());
 
-        List<Follow> followingList = userRepository.findFolloingById(userid);
+        List<Follow> followingList = followRepository.findAllByToUser(userid);
         List<FollowDto> followingDtoList = new ArrayList<>();
 
         for (Follow following : followingList) {

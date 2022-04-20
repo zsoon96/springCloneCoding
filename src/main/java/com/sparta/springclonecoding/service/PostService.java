@@ -40,7 +40,7 @@ public class PostService {
         // 해당 프로필을 팔로우한 유저(팔로워) 수
         Long userFollowerCnt = followRepository.countFollowerById(userid);
         // 해당 프로필이 팔로우한 유저(팔로잉) 수
-        Long userFollowingCnt = followRepository.countFolloingById(userid);
+        Long userFollowingCnt = followRepository.countFollowingById(userid);
 
         return new ProfileDto(user, postCnt, loginUser, userFollowerCnt, userFollowingCnt);
     }
