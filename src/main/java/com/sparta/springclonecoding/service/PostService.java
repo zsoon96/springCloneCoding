@@ -7,6 +7,7 @@ import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
 import com.sparta.springclonecoding.repository.*;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
+import com.sparta.springclonecoding.util.ConvertTime;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class PostService {
     private final FollowRepository followRepository;
     private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
+    private final ConvertTime convertTime;
 
     // 회원 프로필
     public ProfileDto showProfile(UserDetailsImpl userDetails, Long userid){
@@ -124,8 +126,10 @@ public class PostService {
             commentList.add(commentResponseDto);
         }
         List<Favorite> favorites = favoriteRepository.findAllByPostid(post.getId());
+        String timeBefore = convertTime.convertLocaldatetimeToTime(post.getCreatedAt());
 
-        PostResponseDto postResponseDto = new PostResponseDto(post, favorites, commentList, commentCnt,favoriteCnt,myLike,new UserResponseDto(user));
+        PostResponseDto postResponseDto = new PostResponseDto(post, favorites,
+                commentList, commentCnt,favoriteCnt,myLike,new UserResponseDto(user),timeBefore);
         return postResponseDto;
     }
 
