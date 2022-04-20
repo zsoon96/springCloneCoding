@@ -1,16 +1,11 @@
 package com.sparta.springclonecoding.service;
 
-import com.sparta.springclonecoding.dto.CommentResponseDto;
-import com.sparta.springclonecoding.dto.DetailDto;
-import com.sparta.springclonecoding.dto.PostResponseDto;
-import com.sparta.springclonecoding.dto.ProfileDto;
+import com.sparta.springclonecoding.dto.*;
 import com.sparta.springclonecoding.model.Comment;
+import com.sparta.springclonecoding.model.Favorite;
 import com.sparta.springclonecoding.model.Post;
 import com.sparta.springclonecoding.model.User;
-import com.sparta.springclonecoding.repository.CommentRepository;
-import com.sparta.springclonecoding.repository.FollowRepository;
-import com.sparta.springclonecoding.repository.PostRepository;
-import com.sparta.springclonecoding.repository.UserRepository;
+import com.sparta.springclonecoding.repository.*;
 import com.sparta.springclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +25,7 @@ public class PostService {
     private final S3Service s3Service;
     private final FollowRepository followRepository;
     private final CommentRepository commentRepository;
+    private final FavoriteRepository favoriteRepository;
 
     // 회원 프로필
     public ProfileDto showProfile(UserDetailsImpl userDetails, Long userid){
@@ -39,6 +35,7 @@ public class PostService {
         List<Post> postList = postRepository.findByUserId(userid);
         int postCnt = postRepository.countAllByUserId(userid);
         // 로그인 된 유저와 프로필 유저 일치 여부
+        System.out.println(userDetails.getUser());
         boolean loginUser = userid.equals(userDetails.getUser().getId());
         // 해당 프로필을 팔로우한 유저(팔로워) 수
         Long userFollowerCnt = followRepository.countFollowerById(userid);
@@ -54,18 +51,16 @@ public class PostService {
                 ()-> new IllegalArgumentException("없는 포스트입니다"));
         Boolean myLike = false;
         Long userid =userDetails.getUser().getId();
-        for(int i =0; i<post.getFavorites().size(); i++){
-            if (post.getFavorites().get(i).getUserid() == userid) {
-                myLike = true;
-                break;
-            }
-        }
+       if(favoriteRepository.findByUseridAndPostid(userid,postid).isPresent()){
+           myLike = true;
+       }
+       List<Favorite> favorites = favoriteRepository.findAllByPostid(postid);
         // 코멘트 리스트 불러와서 페이징처리
         List<Comment> commentList = commentRepository.findAllByIdOrderByIdDesc(postid);
         final int end = Math.min(loadComment+10 , commentList.size());
         commentList.subList(loadComment,end);
 
-        return new DetailDto(post,post.getFavorites().size(),myLike);
+        return new DetailDto(post,favorites.size(),myLike);
     }
 
     // 게시글 저장
@@ -104,12 +99,10 @@ public class PostService {
     }
 
     @NotNull
-    private PostResponseDto getPostResponseDto(Long userId, Post post) {
+    private PostResponseDto getPostResponseDto(Long userid, Post post) {
         boolean myLike = false;
-        for (int i = 0; i < post.getFavorites().size(); i++) {
-            if (post.getFavorites().get(i).getUserid() == userId){
-                myLike = true;
-            }
+        if(favoriteRepository.findByUseridAndPostid(userid,post.getId()).isPresent()){
+            myLike = true;
         }
         User user = userRepository.findByPosts(post);
 
@@ -120,10 +113,7 @@ public class PostService {
         }
 
         // 좋아요 수
-        int favoriteCnt = 0;
-        if (!post.getFavorites().isEmpty()) {
-            favoriteCnt = post.getFavorites().size();
-        }
+        int favoriteCnt =favoriteRepository.findAllByPostid(post.getId()).size();
 
         List<CommentResponseDto> commentList = new ArrayList<>();
 
@@ -134,8 +124,9 @@ public class PostService {
             CommentResponseDto commentResponseDto = new CommentResponseDto(comment, nickname);
             commentList.add(commentResponseDto);
         }
+        List<Favorite> favorites = favoriteRepository.findAllByPostid(post.getId());
 
-        PostResponseDto postResponseDto = new PostResponseDto(post, commentList, commentCnt,favoriteCnt,myLike,user);
+        PostResponseDto postResponseDto = new PostResponseDto(post, favorites, commentList, commentCnt,favoriteCnt,myLike,new UserResponseDto(user));
         return postResponseDto;
     }
 
@@ -151,6 +142,7 @@ public class PostService {
 
         return getPostResponseDto(userId, post);
     }
+
 
 
     // 게시글 삭제

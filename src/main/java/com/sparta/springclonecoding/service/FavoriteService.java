@@ -21,35 +21,21 @@ public class FavoriteService {
     private final Validator validator;
 
     public void pressLike(Long postid, Long userid){
-        Post post = postRepository.findById(postid).orElseThrow(
-                ()-> new IllegalArgumentException("해당 포스트가 없습니다.")
-        );
-        Optional<Favorite> favorite = favoriteRepository.findById(userid);
-        validator.alreadyLike(favorite.isPresent(), "이미눌러진 좋아요입니다");
-        FavoriteDto favoriteDto = new FavoriteDto(userid);
+        Optional<Favorite> favorite = favoriteRepository.findByUseridAndPostid(userid,postid);
+        if(favorite.isPresent()){
+            throw new IllegalArgumentException("이미 눌러진 좋아요 입니다");
+        }
+        FavoriteDto favoriteDto = new FavoriteDto(userid,postid);
         Favorite favorite1 = new Favorite(favoriteDto);
-        post.getFavorites().add(favorite1);
         favoriteRepository.save(favorite1);
     }
 
 
     public void unpressLike(Long postid,Long userid){
-
-        Post post = postRepository.findById(postid).orElseThrow(
-                ()-> new IllegalArgumentException("게시물이 없다람쥐")
+        Favorite favorite = favoriteRepository.findByUseridAndPostid(userid,postid).orElseThrow(
+                ()-> new IllegalArgumentException("이미 좋아요가 취소되었습니다")
         );
-
-        Optional<Favorite> favorite = favoriteRepository.findByUserid(userid);
-        validator.alreadyLike(!favorite.isPresent(), "취소할 좋아요가 없습니다람쥐 ");
-        Long favoriteId = null;
-        for(int i=0; i<post.getFavorites().size(); i++) {
-            if(post.getFavorites().get(i).getUserid()==userid){
-                favoriteId =post.getFavorites().get(i).getId();
-                break;
-            }
-        }
-        favoriteRepository.deleteById(favoriteId);
-
+        favoriteRepository.deleteByUseridAndPostid(userid, postid);
     }
 }
 
