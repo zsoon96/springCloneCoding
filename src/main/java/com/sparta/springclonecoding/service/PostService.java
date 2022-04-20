@@ -60,7 +60,7 @@ public class PostService {
             }
         }
         // 코멘트 리스트 불러와서 페이징처리
-        List<Comment> commentList = commentRepository.findAllByPostidOrderByIdDesc(postid);
+        List<Comment> commentList = commentRepository.findAllByIdOrderByIdDesc(postid);
         final int end = Math.min(loadComment+10 , commentList.size());
         commentList.subList(loadComment,end);
 
