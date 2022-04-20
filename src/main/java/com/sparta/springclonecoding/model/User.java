@@ -28,14 +28,6 @@ public class User {
     @JoinColumn
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn
-    private List<Favorite> favorites = new ArrayList<>();
-
-    @OneToMany
-    @JoinColumn
-    private List<ChatContent> chatContents = new ArrayList<>();
-
     private String nickname;
 
     public User(String username, String nickname, String password,String profile) {
@@ -44,7 +36,6 @@ public class User {
         this.password = password;
         this.profile = profile;
     }
-
 
     public User(String nickname, String profile) {
         this.nickname = nickname;
